@@ -1,0 +1,9 @@
+/*-- scss:defaults --*/
+
+$color-hs: #005682;
+$color-headerM: #C3625B;
+/*-- scss:rules --*/
+
+h1,h2{ color: $color-headerM; }
+h3,h4{ color: $color-hs; }
+

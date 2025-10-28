@@ -1,0 +1,92 @@
+---
+title: "Adquisición de un monitor de PC mediante métodos multicriterio"
+author: "Víctor Silva Nieves"
+format: 
+  html:
+    toc: true
+    toc-depth: 4
+    toc-expand: true
+    toc-location: left
+    number-sections: true
+    code-fold: false
+    theme:
+      - cosmo
+      - estilo/tema.scss
+lang: es
+---
+
+# Presentación del problema
+
+El objetivo de este documento será elegir la mejor alternativa a la hora de adquirir un nuevo monitor de PC. Se van a considerar dos profesionales diferentes como interesados en esta adquisición, para observar como cambian las decisiones en función de las necesidades de cada uno. 
+
+Se van a seleccionar 5 monitores diferentes, que tratan de representar una variedad de opciones en el mercado actual. Los criterios que se van a considerar son los siguientes:
+
+* Precio (€)
+* Tamaño (pulgadas)
+* Frecuencia de actualización (Hz) o de refresco.
+* Resolución (px)
+* Consumo energético (W) en un instante.
+* Densidad de píxeles (ppi)
+* Brillo (nits)
+* Contraste (en millones de colores M)
+
+Y las alternativas las podemos ver en la siguiente tabla:
+
+```{r}
+datos <- read.csv2("monitores.csv", header = FALSE, sep = ";")
+colnames(datos) <- c("Precio", "Tamaño", "Frecuencia", "Resolución", "Consumo", "Densidad", "Brillo", "Colores")
+unidades <- c("€", "pulgadas", "Hz", "px", "W", "ppi", "nits", "M")
+```
+
+El primer interesado en tomar la decisión es un arquitecto que busca un monitor que le permita trabajar con planos y renderizados de alta calidad. El precio le preocupa en poca medida, pero quiere un monitor que ofrezca buena resolución y una buena representación de colores. Además, valora un tamaño grande para facilitar su trabajo.
+
+El segundo interesado es un desarrollador que trabaja con R y Python. Considera el precio es un factor importante. Valora un gran tamaño de pantalla para poder tener varias ventanas abiertas y una buena frecuencia de actualización para evitar la fatiga visual. La resolución o los colores son menos importantes para él.
+
+En cuanto al consumo ambos quieren que sea lo más bajo posible pero ninguno lo valora especialmente.
+
+```{r}
+
+source("teoriadecision_funciones_multicriterio.R")
+source("teoriadecision_funciones_multicriterio_diagram.R")
+source("teoriadecision_funciones_multicriterio_utiles.R")
+library(DiagrammeR)
+
+```
+
+# Método AHP
+
+Para el método AHP, se va a dar una estructura jerárquica de los criterios y subcriterios.
+
+Se van a considerar tres criterios: Coste, calidad de imagen y experiencia de usuario.
+
+El criterio coste, incluye los subcriterios: precio y consumo energético.
+
+El criterio calidad de imagen, incluye los subcriterios: resolución, densidad, brillo y colores.
+
+Y el criterio experiencia de usuario, incluye los subcriterios: tamaño y frecuencia de actualización.
+
+Vemos a continuación un diagrama que representa esta jerarquía:
+
+```{r}
+DiagrammeR::grViz("
+digraph {
+    node [shape = rectangle, style = 'rounded,filled', fontname = 'Source Sans Pro', fontsize = '12']
+    A [label = 'Elección de un monitor', fillcolor = '#C7645D']
+    B [label = 'Coste', fillcolor = '#E2807A']
+    C [label = 'Calidad de Imagen', fillcolor = '#E2807A']
+    D [label = 'Experiencia de Usuario', fillcolor = '#E2807A']
+    E [label = 'Precio', fillcolor = '#F8A29E']
+    F [label = 'Consumo', fillcolor = '#F8A29E']
+    G [label = 'Resolución', fillcolor = '#F8A29E']
+    H [label = 'Densidad', fillcolor = '#F8A29E']
+    I [label = 'Brillo', fillcolor = '#F8A29E']
+    J [label = 'Colores', fillcolor = '#F8A29E']
+    K [label = 'Tamaño', fillcolor = '#F8A29E']
+    L [label = 'Frecuencia', fillcolor = '#F8A29E']
+    edge[color = '#005A89', arrowsize = '0.5']
+    A -> {B C D}
+    B -> {E F}
+    C -> {G H I J}
+    D -> {K L}
+}")
+```
