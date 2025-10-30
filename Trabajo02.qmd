@@ -31,11 +31,28 @@ Se van a seleccionar 5 monitores diferentes, que tratan de representar una varie
 * Contraste (en millones de colores M)
 
 Y las alternativas las podemos ver en la siguiente tabla:
+```{r}
+
+# Carga de librerías necesarias
+library(DiagrammeR)
+
+# Carga de funciones multicriterio
+source("teoriadecision_funciones_multicriterio.R")
+source("teoriadecision_funciones_multicriterio_diagram.R")
+source("teoriadecision_funciones_multicriterio_utiles.R")
+
+# Carga otras funciones
+source("otras_funciones.R")
+source("tablas_planteamiento_AHP.R")
+
+```
 
 ```{r}
 datos <- read.csv2("monitores.csv", header = FALSE, sep = ";")
-colnames(datos) <- c("Precio", "Tamaño", "Frecuencia", "Resolución", "Consumo", "Densidad", "Brillo", "Colores")
+colnames(datos) <- c("Modelo","Precio", "Tamaño", "Frecuencia", "Resolución", "Consumo", "Densidad", "Brillo", "Colores")
 unidades <- c("€", "pulgadas", "Hz", "px", "W", "ppi", "nits", "M")
+
+crea_tabla_estilo(datos, nombresfila = FALSE)
 ```
 
 El primer interesado en tomar la decisión es un arquitecto que busca un monitor que le permita trabajar con planos y renderizados de alta calidad. El precio le preocupa en poca medida, pero quiere un monitor que ofrezca buena resolución y una buena representación de colores. Además, valora un tamaño grande para facilitar su trabajo.
@@ -44,26 +61,20 @@ El segundo interesado es un desarrollador que trabaja con R y Python. Considera 
 
 En cuanto al consumo ambos quieren que sea lo más bajo posible pero ninguno lo valora especialmente.
 
-```{r}
-
-source("teoriadecision_funciones_multicriterio.R")
-source("teoriadecision_funciones_multicriterio_diagram.R")
-source("teoriadecision_funciones_multicriterio_utiles.R")
-library(DiagrammeR)
-
-```
 
 # Método AHP
 
-Para el método AHP, se va a dar una estructura jerárquica de los criterios y subcriterios.
+## Planteamiento para el método AHP
 
-Se van a considerar tres criterios: Coste, calidad de imagen y experiencia de usuario.
+### Introducción
 
-El criterio coste, incluye los subcriterios: precio y consumo energético.
+Para el método AHP, se va a dar una estructura jerárquica de criterios y subcriterios. Se van a considerar tres criterios: Coste, calidad de imagen y experiencia de usuario.
 
-El criterio calidad de imagen, incluye los subcriterios: resolución, densidad, brillo y colores.
+* El criterio coste, incluye los subcriterios: precio y consumo energético.
 
-Y el criterio experiencia de usuario, incluye los subcriterios: tamaño y frecuencia de actualización.
+* El criterio calidad de imagen, incluye los subcriterios: resolución, densidad, brillo y colores.
+
+* El criterio experiencia de usuario, incluye los subcriterios: tamaño y frecuencia de actualización.
 
 Vemos a continuación un diagrama que representa esta jerarquía:
 
@@ -90,3 +101,205 @@ digraph {
     D -> {K L}
 }")
 ```
+
+### Matrices de comparación por parejas
+
+A continuación se establecen las siguientes matrices de comparación por parejas para los criterios, subcriterios y alternativas. Se ha realizado en un script anexo llamado "tablas_planteamiento_AHP.R" para una mejor legibilidad.
+
+#### Nivel 1 - Criterios
+
+`{r} tbahp0101`
+
+#### Nivel 2 - Subcriterios:
+
+##### Coste:
+`{r} tbahp0201`
+##### Calidad de Imagen:
+`{r} tbahp0202`
+##### Experiencia de Usuario: 
+`{r} tbahp0203`
+
+#### Nivel 3 - Alternativas:
+
+##### Precio:
+`{r} tbahp0301`
+##### Consumo:
+`{r} tbahp0302`
+##### Resolución:
+`{r} tbahp0303`
+##### Densidad:
+`{r} tbahp0304`
+##### Brillo:
+`{r} tbahp0305`
+##### Colores:
+`{r} tbahp0306`
+##### Tamaño:
+`{r} tbahp0307`
+##### Frecuencia:
+`{r} tbahp0308`
+
+## AHP con R
+
+### Introducción de las matrices en R
+
+En primer lugar vamos a introducir las matrices de comparación por parejas para emplear las funciones de clase. Se ha utilizado además la función `multicriterio.metodoAHP.chequeo.matrizcomparaciones` para asegurar que las matrices son válidas.
+
+```{r}
+
+## CRITERIOS
+
+matriz_criterios_ahp <- multicriterio.crea.matrizvaloraciones_mej(
+    c(1/7,1/5,3), numalternativas = 3, v.nombres.alternativas = c(
+        "Coste", "Calidad de Imagen", "Experiencia de Usuario"))
+
+## SUBCRITERIOS
+
+#Coste
+matriz_subcriterio_coste_ahp <- multicriterio.crea.matrizvaloraciones_mej(
+    c(5), numalternativas = 2, v.nombres.alternativas = c("Precio", "Consumo"))
+
+#Calidad de imagen
+matriz_subcriterio_calidad_ahp <- multicriterio.crea.matrizvaloraciones_mej(
+    c(2,7,5,5,3,1/3), numalternativas = 4, v.nombres.alternativas = c(
+        "Resolución", "Densidad", "Brillo", "Colores"))
+
+#Experiencia de usuario
+matriz_subcriterio_experiencia_ahp <- multicriterio.crea.matrizvaloraciones_mej(
+    c(3), numalternativas = 2, v.nombres.alternativas = c("Tamaño", "Frecuencia"))
+
+## ALTERNATIVAS
+ 
+#Precio
+matriz_alternativas_precio_ahp <- multicriterio.crea.matrizvaloraciones_mej(
+    c(1/7,1/2,1/9,1/5,5,1/4,3,1/7,1/4,5), numalternativas = 5, v.nombres.alternativas = datos$Modelo)
+
+#Consumo
+matriz_alternativas_consumo_ahp <- multicriterio.crea.matrizvaloraciones_mej(
+    c(1/4,1/2,1/9,1/3,3,1/6,2,1/8,3,7), numalternativas = 5, v.nombres.alternativas = datos$Modelo)
+
+#Resolución
+matriz_alternativas_resolucion_ahp <- multicriterio.crea.matrizvaloraciones_mej(
+    c(5,5,9,1,1,3,1/5,3,1/5,1/9), numalternativas = 5, v.nombres.alternativas = datos$Modelo)
+
+#Densidad
+matriz_alternativas_densidad_ahp <- multicriterio.crea.matrizvaloraciones_mej(
+    c(3,5,7,1,3,5,1/3,3,1/5,1/7), numalternativas = 5, v.nombres.alternativas = datos$Modelo)
+
+#Brillo
+matriz_alternativas_brillo_ahp <- multicriterio.crea.matrizvaloraciones_mej(
+    c(7,2,7,6,1/3,1,2,6,5,2), numalternativas = 5, v.nombres.alternativas = datos$Modelo)
+
+#Colores
+matriz_alternativas_colores_ahp <- multicriterio.crea.matrizvaloraciones_mej(
+    c(7,1,7,1,1/7,1,1/7,7,1,1/7), numalternativas = 5, v.nombres.alternativas = datos$Modelo)
+
+#Tamaño
+matriz_alternativas_tamaño_ahp <- multicriterio.crea.matrizvaloraciones_mej(
+    c(7,1,7,5,1/7,1,1/3,7,5,1/3), numalternativas = 5, v.nombres.alternativas = datos$Modelo)
+
+# Frecuencia
+matriz_alternativas_frecuencia_ahp <- multicriterio.crea.matrizvaloraciones_mej(
+    c(1/5,1/3,5,7,3,7,9,6,8,3), numalternativas = 5, v.nombres.alternativas = datos$Modelo)
+
+```
+
+```{r}
+## Intento trabajar con listas para reducir el código
+
+lista_matrices_parejas <- list(matriz_criterios_ahp,
+                               matriz_subcriterio_coste_ahp,
+                               matriz_subcriterio_calidad_ahp,
+                               matriz_subcriterio_experiencia_ahp,
+                               matriz_alternativas_precio_ahp,
+                               matriz_alternativas_consumo_ahp,
+                               matriz_alternativas_resolucion_ahp,
+                               matriz_alternativas_densidad_ahp,
+                               matriz_alternativas_brillo_ahp,
+                               matriz_alternativas_colores_ahp,
+                               matriz_alternativas_tamaño_ahp,
+                               matriz_alternativas_frecuencia_ahp)
+
+## Le ponemos nombres para facilitar su localización
+nombres_matrices <- c("Criterios", "Coste", "Calidad", "Experiencia",
+                                "Precio", "Consumo", "Resolución", "Densidad",
+                                "Brillo", "Colores", "Tamaño", "Frecuencia")
+names(lista_matrices_parejas) <- nombres_matrices
+
+## Ahora a todas las matrices de esta lista le aplicamos la función de inconsistencia
+
+lista_inconsistencias <- lapply(lista_matrices_parejas, multicriterio.metodoAHP.coef.inconsistencia)
+
+## Ahora a todas las matrices de la lista de matrices por parejas le aplicamos la función para calcular pesos
+
+lista_pesos <- lapply(lista_matrices_parejas, multicriterio.metodoAHP.variante2.mediageometrica)
+
+```
+
+### Inconsistencia
+
+Se ha realizado una tabla que recoge el análisis de inconsistencia de todas las matrices empleadas en el método AHP. Además se incluye una columna que recoge la validación de la matriz para su uso en el método AHP.
+
+```{r}
+## Al usar el método con listas, la hemos calculado también para matrices 2x2 sin ser necesario. 
+# Esta función, permite redondear RI de aquellos que queremos calcular y sustituye NaN por "-"
+# para mostrarlo en la tabla.
+
+convertir_vector_valores_listaNaN <- function (x) {
+    if(is.nan(x$RI.coef.inconsistencia)){
+        inter <- "-"
+    } else {
+        inter <- round(x$RI.coef.inconsistencia,4)
+    }
+    return(inter)
+}
+tabla_inconsistencia_ahp <- data.frame(
+    Matriz = c(
+        "Criterios",
+        "Subcriterio Coste",
+        "Subcriterio Calidad de Imagen",
+        "Subcriterio Experiencia de Usuario",
+        "Alternativa Precio",
+        "Alternativa Consumo",
+        "Alternativa Resolución",
+        "Alternativa Densidad",
+        "Alternativa Brillo",
+        "Alternativa Colores",
+        "Alternativa Tamaño",
+        "Alternativa Frecuencia"
+    ),
+    `RI Coeficiente inconsistencia` = sapply(lista_inconsistencias, convertir_vector_valores_listaNaN),
+    Estado = sapply(lista_inconsistencias, function(x) x$mensaje),
+    `Matriz aceptable` = sapply(lista_matrices_parejas, multicriterio.metodoAHP.chequeo.matrizcomparaciones))
+
+    crea_tabla_estilo(tabla_inconsistencia_ahp, nombresfila = FALSE)
+
+```
+
+```{r}
+# Preparación matriz criterios*subcriterios
+
+c11 <- lista_pesos$Criterios$valoraciones.ahp[1] * lista_pesos$Coste$valoraciones.ahp[1]
+c12 <- lista_pesos$Criterios$valoraciones.ahp[1] * lista_pesos$Coste$valoraciones.ahp[2]
+c21 <- lista_pesos$Criterios$valoraciones.ahp[2] * lista_pesos$Calidad$valoraciones.ahp[1]
+c22 <- lista_pesos$Criterios$valoraciones.ahp[2] * lista_pesos$Calidad$valoraciones.ahp[2]
+c23 <- lista_pesos$Criterios$valoraciones.ahp[2] * lista_pesos$Calidad$valoraciones.ahp[3]
+c24 <- lista_pesos$Criterios$valoraciones.ahp[2] * lista_pesos$Calidad$valoraciones.ahp[4]
+c31 <- lista_pesos$Criterios$valoraciones.ahp[3] * lista_pesos$Experiencia$valoraciones.ahp[1]
+c32 <- lista_pesos$Criterios$valoraciones.ahp[3] * lista_pesos$Experiencia$valoraciones.ahp[2]
+
+criterios_subcriterios <- c(c11,c12,c21,c22,c23,c24,c31,c32)
+
+mat_pesos_alternativas <- matrix(c(
+                            sapply(lista_pesos[5:12],function(x) x$valoraciones.ahp)
+                            ),
+                            ncol = 5, nrow = 8, byrow = TRUE)
+
+ponderaciones_final <- criterios_subcriterios %*% mat_pesos_alternativas
+colnames(ponderaciones_final) <- datos$Modelo
+
+ponderaciones_final
+
+```
+
+## AHP con paquete
+
