@@ -344,11 +344,93 @@ criterios_subcriterios
 
 # Método ELECTRE
 
+### Matriz de decisión
+
+Se establece la matriz de decisión, tenemos que hacer negativos los valores que se van a minimizar.
+
 ```{r}
 
 matriz_decisión <- multicriterio.crea.matrizdecision(
-                    c()
+                    c(-505,-40,2160,139,450,1060,39.7,120,
+                      -244,-35,1440,108,250,16.7,27,180,
+                      -449,-39,1440,93,400,1070,40,155,
+                      -108,-21,1080,81,250,16.7,27,100,
+                      -290,-37,2160,139,270,1000,31.5,60
+                    ), 
+                    numalternativas = 5,
+                    numcriterios = 8
 )
+
+matriz_decisión
+
 ```
 
+### Establecemos los parámetros para el método
 
+#### Pesos
+
+Como se ha mencionado anteriormente, vamos a emplear los pesos que hemos obtenido tras emplear el método AHP para los criterios y subcriterios
+
+# Mostrar en una tabla estos pesos
+
+#### Test de concordancia
+
+El test de concordancia requiere un valor alfa que al ser reducido permite que más alternativas dominen a otras. El valor de alfa inicial que vamos a tomar es 0.7.
+
+#### Test de discordancia
+
+Los valores para $d_i$ pueden condicionar el resultado, en nuestro caso tenemos pocas alternativas, de características y rangos de precio muy variadas. Que lo hacen muy sensible a estos valores.
+
+* Brillo: Una diferencia mayor de 50 nits en el brillo será suficiente para no pasar el test de discordancia.
+* Colores: Se considera que diferencias menores a 100 (millones de colores) son insuficientes para no pasar el test de discordancia.
+* Tamaño de pantalla: Una diferencia mayor de 3" hará que no se supere el test de discordancia
+
+A continuación se proponen otros posibles valores para ejemplos con mayor cantidad de alternativas o con modelos de una gama similar.
+
+* Precio: 150€
+* Consumo: 15W 
+* Resolución: 720 px
+* Densidad de píxeles: 40 ppi
+* Frecuencia de refresco: 60 Hz 
+
+Además se considera que estas cantidades deberían ser ajustadas e introducidas en el método acorde a los pesos y las magnitudes. Por ejemplo, si se hubiera dado mayor importancia al precio en los pesos podríamos introducirlo como elemento para no superar el test de discordancia.
+
+Algunas de las cantidades propuestas, como la resolución, serían adecuadas para este problema. La no influencia en el resultado final ha desincentivado su inclusión.
+
+### Primera iteración
+```{r}
+
+iteración1_ELECTRE <- multicriterio.metodoELECTRE_I(matriz_decisión, 
+                                                    pesos.criterios = criterios_subcriterios,
+                                                    nivel.concordancia.minimo.alpha = 0.7,
+                                                    no.se.compensan = c(Inf,Inf,Inf,Inf,50,100,3,Inf),
+                                                    que.alternativas = TRUE
+)
+
+iteración1_ELECTRE$nucleo_aprox
+qgraph::qgraph(iteración1_ELECTRE$relacion.dominante)
+
+test <- func_ELECTRE_Completo(iteración1_ELECTRE)
+
+```
+
+Vemos que para este valor de alfa, las mejores alternativas son a1 y a3. Y observando el grafo podríamos concluir que la siguiente mejor opción es a5.
+
+Vamos a reducir el valor de alfa y nos vamos 
+
+```{r}
+iteración2_ELECTRE <- multicriterio.metodoELECTRE_I(matriz_decisión, 
+                                                    pesos.criterios = criterios_subcriterios,
+                                                    nivel.concordancia.minimo.alpha = 0.6,
+                                                    no.se.compensan = c(Inf,Inf,Inf,Inf,50,100,3,Inf),
+                                                    que.alternativas = c(1,3)
+)
+
+iteración2_ELECTRE$nucleo_aprox
+qgraph::qgraph(iteración2_ELECTRE$relacion.dominante)
+
+``` 
+
+Vemos que para este valor de alfa, las mejores alternativas son a1 y a3. Y observando el grafo podríamos concluir que la siguiente mejor opción es a5.
+
+Vamos a reducir el valor de alfa y nos vamos 
