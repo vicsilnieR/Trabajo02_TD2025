@@ -1,0 +1,150 @@
+
+Version: 2.0
+Alternatives: &alternatives
+  LG-UltraFine-40WT95UF:
+  Asus-TUF-Gaming-VG27AQ3A:
+  MSI-MAG401QR:
+  Asus-VZ27EHF:
+  Samsung-UJ59:
+Goal:
+  name: Elegir el mejor monitor de PC
+  preferences:
+    pairwise:
+      - [Coste, Calidad, 1/7]
+      - [Coste, Experiencia, 1/5]
+      - [Calidad, Experiencia, 3]
+  children:
+    Coste:
+      preferences:
+        pairwise:
+          - [Precio, Consumo, 5]
+      children:
+        Precio:
+          preferences:
+            pairwise:
+              - [LG-UltraFine-40WT95UF,Asus-TUF-Gaming-VG27AQ3A,1/7]
+              - [LG-UltraFine-40WT95UF,MSI-MAG401QR,1/2]
+              - [LG-UltraFine-40WT95UF,Asus-VZ27EHF,1/9]
+              - [LG-UltraFine-40WT95UF,Samsung-UJ59,1/5]
+              - [Asus-TUF-Gaming-VG27AQ3A,MSI-MAG401QR,5]
+              - [Asus-TUF-Gaming-VG27AQ3A,Asus-VZ27EHF,1/4]
+              - [Asus-TUF-Gaming-VG27AQ3A,Samsung-UJ59,3]
+              - [MSI-MAG401QR,Asus-VZ27EHF,1/7]
+              - [MSI-MAG401QR,Samsung-UJ59,1/4]
+              - [Asus-VZ27EHF,Samsung-UJ59,5]
+          children: *alternatives
+        Consumo:
+          preferences:
+            pairwise:
+              - [LG-UltraFine-40WT95UF,Asus-TUF-Gaming-VG27AQ3A,1/4]
+              - [LG-UltraFine-40WT95UF,MSI-MAG401QR,1/2]
+              - [LG-UltraFine-40WT95UF,Asus-VZ27EHF,1/9]
+              - [LG-UltraFine-40WT95UF,Samsung-UJ59,1/3]
+              - [Asus-TUF-Gaming-VG27AQ3A,MSI-MAG401QR,3]
+              - [Asus-TUF-Gaming-VG27AQ3A,Asus-VZ27EHF,1/6]
+              - [Asus-TUF-Gaming-VG27AQ3A,Samsung-UJ59,2]
+              - [MSI-MAG401QR,Asus-VZ27EHF,1/8]
+              - [MSI-MAG401QR,Samsung-UJ59,3]
+              - [Asus-VZ27EHF,Samsung-UJ59,7]
+          children: *alternatives
+    Calidad:
+      preferences:
+        pairwise:
+          - [Resolución, Densidad, 2]
+          - [Resolución, Brillo, 7]
+          - [Resolución, Colores, 5]
+          - [Densidad, Brillo, 5]
+          - [Densidad, Colores, 3]
+          - [Brillo, Colores, 1/3]
+      children:
+        Resolución:
+          preferences:
+            pairwise:
+              - [LG-UltraFine-40WT95UF,Asus-TUF-Gaming-VG27AQ3A,5]
+              - [LG-UltraFine-40WT95UF,MSI-MAG401QR,5]
+              - [LG-UltraFine-40WT95UF,Asus-VZ27EHF,9]
+              - [LG-UltraFine-40WT95UF,Samsung-UJ59,1]
+              - [Asus-TUF-Gaming-VG27AQ3A,MSI-MAG401QR,1]
+              - [Asus-TUF-Gaming-VG27AQ3A,Asus-VZ27EHF,3]
+              - [Asus-TUF-Gaming-VG27AQ3A,Samsung-UJ59,1/5]
+              - [MSI-MAG401QR,Asus-VZ27EHF,3]
+              - [MSI-MAG401QR,Samsung-UJ59,1/5]
+              - [Asus-VZ27EHF,Samsung-UJ59,1/9]
+          children: *alternatives
+        Densidad:
+          preferences:
+            pairwise:
+              - [LG-UltraFine-40WT95UF,Asus-TUF-Gaming-VG27AQ3A,3]
+              - [LG-UltraFine-40WT95UF,MSI-MAG401QR,5]
+              - [LG-UltraFine-40WT95UF,Asus-VZ27EHF,7]
+              - [LG-UltraFine-40WT95UF,Samsung-UJ59,1]
+              - [Asus-TUF-Gaming-VG27AQ3A,MSI-MAG401QR,3]
+              - [Asus-TUF-Gaming-VG27AQ3A,Asus-VZ27EHF,5]
+              - [Asus-TUF-Gaming-VG27AQ3A,Samsung-UJ59,1/3]
+              - [MSI-MAG401QR,Asus-VZ27EHF,3]
+              - [MSI-MAG401QR,Samsung-UJ59,1/5]
+              - [Asus-VZ27EHF,Samsung-UJ59,1/7]
+          children: *alternatives
+        Brillo:
+          preferences:
+            pairwise:
+              - [LG-UltraFine-40WT95UF,Asus-TUF-Gaming-VG27AQ3A,7]
+              - [LG-UltraFine-40WT95UF,MSI-MAG401QR,2]
+              - [LG-UltraFine-40WT95UF,Asus-VZ27EHF,7]
+              - [LG-UltraFine-40WT95UF,Samsung-UJ59,6]
+              - [Asus-TUF-Gaming-VG27AQ3A,MSI-MAG401QR,1/3]
+              - [Asus-TUF-Gaming-VG27AQ3A,Asus-VZ27EHF,1]
+              - [Asus-TUF-Gaming-VG27AQ3A,Samsung-UJ59,2]
+              - [MSI-MAG401QR,Asus-VZ27EHF,6]
+              - [MSI-MAG401QR,Samsung-UJ59,5]
+              - [Asus-VZ27EHF,Samsung-UJ59,2]
+          children: *alternatives
+        Colores:
+          preferences:
+            pairwise:
+              - [LG-UltraFine-40WT95UF,Asus-TUF-Gaming-VG27AQ3A,7]
+              - [LG-UltraFine-40WT95UF,MSI-MAG401QR,1]
+              - [LG-UltraFine-40WT95UF,Asus-VZ27EHF,7]
+              - [LG-UltraFine-40WT95UF,Samsung-UJ59,1]
+              - [Asus-TUF-Gaming-VG27AQ3A,MSI-MAG401QR,1/7]
+              - [Asus-TUF-Gaming-VG27AQ3A,Asus-VZ27EHF,1]
+              - [Asus-TUF-Gaming-VG27AQ3A,Samsung-UJ59,1/7]
+              - [MSI-MAG401QR,Asus-VZ27EHF,7]
+              - [MSI-MAG401QR,Samsung-UJ59,1]
+              - [Asus-VZ27EHF,Samsung-UJ59,1/7]
+          children: *alternatives
+    Experiencia:
+      preferences:
+        pairwise:
+          - [Tamaño, Frecuencia, 3]
+      children:
+        Tamaño:
+          preferences:
+            pairwise:
+              - [LG-UltraFine-40WT95UF,Asus-TUF-Gaming-VG27AQ3A,7]
+              - [LG-UltraFine-40WT95UF,MSI-MAG401QR,1]
+              - [LG-UltraFine-40WT95UF,Asus-VZ27EHF,7]
+              - [LG-UltraFine-40WT95UF,Samsung-UJ59,5]
+              - [Asus-TUF-Gaming-VG27AQ3A,MSI-MAG401QR,1/7]
+              - [Asus-TUF-Gaming-VG27AQ3A,Asus-VZ27EHF,1]
+              - [Asus-TUF-Gaming-VG27AQ3A,Samsung-UJ59,1/3]
+              - [MSI-MAG401QR,Asus-VZ27EHF,7]
+              - [MSI-MAG401QR,Samsung-UJ59,5]
+              - [Asus-VZ27EHF,Samsung-UJ59,1/3]
+          children: *alternatives
+        Frecuencia:
+          preferences:
+            pairwise:
+              - [LG-UltraFine-40WT95UF,Asus-TUF-Gaming-VG27AQ3A,1/5]
+              - [LG-UltraFine-40WT95UF,MSI-MAG401QR,1/3]
+              - [LG-UltraFine-40WT95UF,Asus-VZ27EHF,5]
+              - [LG-UltraFine-40WT95UF,Samsung-UJ59,7]
+              - [Asus-TUF-Gaming-VG27AQ3A,MSI-MAG401QR,3]
+              - [Asus-TUF-Gaming-VG27AQ3A,Asus-VZ27EHF,7]
+              - [Asus-TUF-Gaming-VG27AQ3A,Samsung-UJ59,9]
+              - [MSI-MAG401QR,Asus-VZ27EHF,6]
+              - [MSI-MAG401QR,Samsung-UJ59,8]
+              - [Asus-VZ27EHF,Samsung-UJ59,3]
+          children: *alternatives
+
+    

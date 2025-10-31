@@ -35,6 +35,7 @@ Y las alternativas las podemos ver en la siguiente tabla:
 
 # Carga de librerías necesarias
 library(DiagrammeR)
+library(ahp)
 
 # Carga de funciones multicriterio
 source("teoriadecision_funciones_multicriterio.R")
@@ -288,6 +289,7 @@ c31 <- lista_pesos$Criterios$valoraciones.ahp[3] * lista_pesos$Experiencia$valor
 c32 <- lista_pesos$Criterios$valoraciones.ahp[3] * lista_pesos$Experiencia$valoraciones.ahp[2]
 
 criterios_subcriterios <- c(c11,c12,c21,c22,c23,c24,c31,c32)
+names(criterios_subcriterios) <- nombres_matrices[5:12]
 
 mat_pesos_alternativas <- matrix(c(
                             sapply(lista_pesos[5:12],function(x) x$valoraciones.ahp)
@@ -302,4 +304,51 @@ ponderaciones_final
 ```
 
 ## AHP con paquete
+
+En primer lugar tenemos que crear el archivo ahp que almacena el modelo necesario para este paquete.
+
+```{r}
+modelo_ahp <- ahp::Load("modelo_monitores.ahp")
+modelo_ahp
+
+#Paso 2. Calcular las prioridades
+Calculate(modelo_ahp,pairwiseFun = )
+print(modelo_ahp, priority = function(x) x$parent$priority["Total", x$name])
+
+#Paso 3. Visualizar la jerarquía
+Visualize(modelo_ahp)
+
+#Paso 4. Analizar
+Analyze(modelo_ahp,variable = "priority" ,sort="orig")
+#Paso 4b. alternativo
+Analyze(modelo_ahp)
+#Paso 5. Analizar con Tabla Mejorada
+aa = AnalyzeTable(modelo_ahp)
+formattable::as.htmlwidget(aa)
+#Paso 5b. alternativo
+aa = AnalyzeTable(modelo_ahp,variable = "priority",sort = "orig")
+formattable::as.htmlwidget(aa)
+
+```
+
+```{r}
+#| eval: false
+ahp::RunGUI()
+```
+
+Para los métodos siquientes se van a emplear los pesos que hemos calculado usando el método AHP, de forma que podamos comparar los distintos métodos y sus resultados. Los teníamos almacenados en el vector criterios_subcriterios.
+
+```{r}
+criterios_subcriterios
+```
+
+# Método ELECTRE
+
+```{r}
+
+matriz_decisión <- multicriterio.crea.matrizdecision(
+                    c()
+)
+```
+
 
