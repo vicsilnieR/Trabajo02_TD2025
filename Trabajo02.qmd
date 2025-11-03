@@ -3,15 +3,14 @@ title: "Adquisición de un monitor de PC mediante métodos multicriterio"
 author: "Víctor Silva Nieves"
 format: 
   html:
-    toc: true
-    toc-depth: 4
-    toc-expand: true
-    toc-location: left
-    number-sections: true
+    toc: false
+    number-sections: false
     code-fold: false
+    embed-resources: true
     theme:
       - cosmo
       - estilo/tema.scss
+    warning: false
 lang: es
 ---
 
@@ -45,6 +44,7 @@ source("teoriadecision_funciones_multicriterio_utiles.R")
 # Carga otras funciones
 source("otras_funciones.R")
 source("tablas_planteamiento_AHP.R")
+source("animación_grafo.R")
 
 ```
 
@@ -62,8 +62,9 @@ El segundo interesado es un desarrollador que trabaja con R y Python. Considera 
 
 En cuanto al consumo ambos quieren que sea lo más bajo posible pero ninguno lo valora especialmente.
 
+::: {.panel-tabset}
 
-# Método AHP
+# Método AHP 
 
 ## Planteamiento para el método AHP
 
@@ -410,6 +411,8 @@ iteración1_ELECTRE <- multicriterio.metodoELECTRE_I(matriz_decisión,
 iteración1_ELECTRE$nucleo_aprox
 qgraph::qgraph(iteración1_ELECTRE$relacion.dominante)
 
+construir_grafo_animado(iteración1_ELECTRE$relacion.dominante, plantilla = "spring")
+
 test <- func_ELECTRE_Completo(iteración1_ELECTRE)
 
 ```
@@ -427,10 +430,111 @@ iteración2_ELECTRE <- multicriterio.metodoELECTRE_I(matriz_decisión,
 )
 
 iteración2_ELECTRE$nucleo_aprox
-qgraph::qgraph(iteración2_ELECTRE$relacion.dominante)
+qgraph::qgraph(iteración2_ELECTRE$relacion.dominante, color = "#F8A29E", edge.color = "#005682" , edge.width = 1)
+
+
+posiciones <- qgraph::qgraph(iteración1_ELECTRE$relacion.dominante, layout = "spring")
+
+animacion <- qgraph::qgraph.animate(iteración1_ELECTRE$relacion.dominante, color = "#F8A29E", edge.color = "#005682" , edge.width = 1, constraint = Inf,
+growth = "order", sleep = 0, smooth = TRUE, plotGraphs = FALSE, progress = FALSE, initLayout = posiciones$layout)
+
+img_list <- lapply(animacion, function(g) {
+  tmpfile <- tempfile(fileext = ".png")
+  png(tmpfile, width = 600, height = 600)
+  plot(g)
+  dev.off()
+  magick::image_read(tmpfile)
+})
+
+gif <- magick::image_animate(magick::image_join(img_list), fps = 0.5)
+gif
+magick::image_write(gif, "animacion_electre.gif")
 
 ``` 
 
 Vemos que para este valor de alfa, las mejores alternativas son a1 y a3. Y observando el grafo podríamos concluir que la siguiente mejor opción es a5.
 
-Vamos a reducir el valor de alfa y nos vamos 
+Vamos a reducir el valor de alfa y las 
+
+# Método PROMETHEE
+
+## Tab
+
+### Funciones de preferencia
+
+Para cada criterio vamos a elegir una función de preferencia según la naturaleza de cada uno, tratando además que proporcionen mayor satisfacción a los requisitos del arquitecto. Recordemos los criterios:
+
+* **Precio:** El precio no está entre los requisitos más importantes, pero queremos que tenga algo de indicencia en la decisión final, querríamos que para cantidades con diferencias pequeñas no exista preferencia alguna. Por ello vamos a tomar un valor de Q= 50€
+
+* **Consumo:** El coste anual que supone una diferencia de 10W trabajando es de 2.4€; Cálculo: 10W = 0.01 kW, 6 horas al día todos los días, 0.01 kW x 6 x 365 = 21.90 kWh anuales. Con el precio medio actual 0.1090 €/kWh: 21.90 kWh x 0.1090 €/kWh = 2.3871€. Esto motiva que sigamos optemos por el Cuasi-Criterio. Con no preferencia en todas las diferencias menores que Q = 10W.
+
+* **Resolución:** Aquí queremos que haya dominancia absoluta en aquellos valores que superen a otros por 720 px, de esta forma establecemos niveles bien diferenciados según la resolución. Preferencia lineal
+
+* **Densidad:** Para la densidad de píxeles vamos a emplear el criterio usual, queremos que cualquier diferencia positiva resulte en preferencia absoluta. Si tuviéramos monitores con densidad de píxeles por encima de 150 elegiríamos un criterio que nos permitiera diferenciar que a partir de esa cantidad apenas existe diferencia.
+
+* **Brillo:** Para el brillo vamos a optar por dar preferencia a monitores con más de 100 nits de diferencia. Preferencia lineal.
+
+* **Colores:** En el caso de los colores vamos a tratar de diferenciar aquellos con 16.7 millones de colores de aquellos que tienen +1000 millones de colores. Así cuando la diferencia sea menor de 100 (M) diremos que no hay preferencia. Cuasi-criterio.
+
+* **Tamaño:** En cuanto al tamaño, queremos que monitores de tamaños muy similares no tengan dominancia entre si y que cualquier salto de tamaño medio nos proporcione dominancia absoluta. Para ello P = 4" y Q = 2". Función elegida lineal con área de indiferencia.
+
+* **Frecuencia:** La frecuencia de refresco sigue una escala particular, normalmente saltos de 30 Hz se hacen notar bastante hasta cierta cantidad de Hz que los saltos deben ser mayores para que se note. Como para el arquitecto es un factor secundario, vamos a tomar que diferencias menores a 20 Hz no supondrán preferencia de una alternativa sobre otra y que saltos de 59 Hz si harán que escojamos una alternativa con preferencia absoluta. Para los valores intermedios queremos un reparto suavizado, vamos a tomar S = 60 Hz
+
+
+```{r}
+
+tabla_preferencia <- matrix(c(2,50,0,0, 
+                              2,10,0,0, 
+                              3,0,720,0,
+                              1,0,0,0,
+                              3,0,100,0,
+                              2,100,0,0,
+                              5,2,4,0,
+                              6,60,20,60),
+                              ncol = 4, 
+                              byrow = TRUE)
+```
+
+## PROMETHEE I
+
+
+```{r}
+resultado_Promethee_I <- multicriterio.metodo.promethee_i(matriz_decisión,
+                                                        criterios_subcriterios,
+                                                        tabla_preferencia)
+
+resultado_Promethee_I$tabla.indices
+resultado_Promethee_I$tablarelacionsupera
+qgraph::qgraph(resultado_Promethee_I$tablarelacionsupera, color = "#F8A29E", edge.color = "#005682" , edge.width = 0.5)
+```
+
+### Medias
+
+```{r}
+resultado_Promethee_I_medias <- multicriterio.metodo.promethee_i_med(matriz_decisión, criterios_subcriterios, tabla_preferencia)
+
+qgraph::qgraph(resultado_Promethee_I_medias$tablarelacionsupera)
+```
+
+## PROMETHEE II
+
+
+```{r}
+
+resultado_Promethee_II <- multicriterio.metodo.promethee_ii(matriz_decisión, criterios_subcriterios, tabla_preferencia)
+
+resultado_Promethee_II$vflujos.netos
+
+qgraph::qgraph(resultado_Promethee_II$tablarelacionsupera)
+
+resultado_Promethee_II_Win <- multicriterio.metodo.promethee_windows(matriz_decisión, tabla_preferencia, criterios_subcriterios, c(rep("min",2),rep("max",6)))
+    
+source("teoriadecision_funciones_multicriterio_utiles.R")
+test <- multicriterio.metodo.promethee_windows_kableExtra_html(resultado_Promethee_II_Win)
+test$tabEscenario
+test$tabAcciones
+```
+
+# Método axiomático de Arrow y Raymond
+
+:::

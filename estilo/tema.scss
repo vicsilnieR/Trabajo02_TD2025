@@ -7,3 +7,31 @@ $color-headerM: #C3625B;
 h1,h2{ color: $color-headerM; }
 h3,h4{ color: $color-hs; }
 
+/* Texto de las pestañas */
+
+.panel-tabset .nav-link {
+  color: $color-headerM; /* color normal (no activa) */
+}
+
+.panel-tabset .nav-link.active {
+  color: $color-hs !important; /* color cuando está seleccionada */
+}
+
+/* Hover de las tablas tipo paper */
+
+.lightable-paper tr:hover {
+  background-color: #90caf9 !important; 
+  color: #000000 !important;            
+}
+
+/* color del borde o sombra al hacer hover */
+.lightable-paper tr:hover td {
+  border-color: #90caf9 !important;    
+}
+
+/* Hover para TODAS las tablas de Kable */
+table.kable tr:hover {
+  background-color: #90caf9 !important;
+  color: #000 !important;
+}
+

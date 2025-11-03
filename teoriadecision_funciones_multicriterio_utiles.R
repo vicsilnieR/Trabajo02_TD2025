@@ -785,11 +785,17 @@ multicriterio.metodo.promethee_windows = function(matdecision, tab.fpref, pesos.
 multicriterio.metodo.promethee_windows_kableExtra_html = function(res_promethee_windows) {
 
     #library(kableExtra)
-    tab01 = kbl(res_promethee_windows$Escenario) |>
-        kable_paper("striped", full_width = F) |>
-        pack_rows("Preferencias",1,6) |>
-        pack_rows("Estadísticas",7,10) |>
-        pack_rows("Evaluaciones",11,nrow(res_promethee_windows$Escenario))
+    tab01 = kbl(res_promethee_windows$Escenario, booktabs = TRUE) |>
+        kable_paper("hover", full_width = F, 
+                    html_font = "sans-serif") |>
+        pack_rows("Preferencias",1,6, 
+                  label_row_css = "background-color: #7FBFF5") |>
+        pack_rows("Estadísticas",7,10, 
+                  label_row_css = "background-color: #7FBFF5") |>
+        pack_rows("Evaluaciones",11,nrow(res_promethee_windows$Escenario), 
+                  label_row_css = "background-color: #7FBFF5") |> 
+        row_spec(0, bold = TRUE, background = "#F8A29E") |> 
+        column_spec(1, background = "#F8A29E", border_right = TRUE)
 
     tab02 = kbl(res_promethee_windows$Acciones) |>
         kable_paper("striped", full_width = F)
