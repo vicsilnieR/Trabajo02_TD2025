@@ -125,7 +125,7 @@ matriz_alternativas_tamano_planteamiento <- data.frame(as.data.frame(
              "1/7", "1", "1/7", "1", "1/3",
              "1", "7", "1", "7", "5",
              "1/7", "1", "1/7", "1", "1/3",
-             "1/5", "1/3", "1/5", "1/3", "1"),
+             "1/5", "3", "1/5", "3", "1"),
            nrow = 5, byrow = TRUE)
 ))
 rownames(matriz_alternativas_tamano_planteamiento) <- datos$Modelo

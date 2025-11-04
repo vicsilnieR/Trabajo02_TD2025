@@ -16,7 +16,7 @@ lang: es
 
 # Presentación del problema
 
-El objetivo de este documento será elegir la mejor alternativa a la hora de adquirir un nuevo monitor de PC. Se van a considerar dos profesionales diferentes como interesados en esta adquisición, para observar como cambian las decisiones en función de las necesidades de cada uno. 
+El objetivo de este documento será elegir la mejor alternativa a la hora de adquirir un nuevo monitor de PC. Se va a considerar que el individuo interesado en esta adquisición va a ser un arquitecto que necesita un nuevo monitor para su estudio.
 
 Se van a seleccionar 5 monitores diferentes, que tratan de representar una variedad de opciones en el mercado actual. Los criterios que se van a considerar son los siguientes:
 
@@ -56,13 +56,11 @@ unidades <- c("€", "pulgadas", "Hz", "px", "W", "ppi", "nits", "M")
 crea_tabla_estilo(datos, nombresfila = FALSE)
 ```
 
-El primer interesado en tomar la decisión es un arquitecto que busca un monitor que le permita trabajar con planos y renderizados de alta calidad. El precio le preocupa en poca medida, pero quiere un monitor que ofrezca buena resolución y una buena representación de colores. Además, valora un tamaño grande para facilitar su trabajo.
+Este arquitecto busca un monitor que le permita trabajar con planos y renderizados de alta calidad. El precio le preocupa en poca medida, pero quiere un monitor que ofrezca buena resolución y una buena representación de colores. Además, valora un tamaño grande para facilitar su trabajo. En cuanto al consumo, quiere que sea lo más bajo posible, pero no lo valora especialmente.
 
-El segundo interesado es un desarrollador que trabaja con R y Python. Considera el precio es un factor importante. Valora un gran tamaño de pantalla para poder tener varias ventanas abiertas y una buena frecuencia de actualización para evitar la fatiga visual. La resolución o los colores son menos importantes para él.
+# Elegir un método {#cambioMétodo}
 
-En cuanto al consumo ambos quieren que sea lo más bajo posible pero ninguno lo valora especialmente.
-
-::: {.panel-tabset}
+::: {.panel-tabset} 
 
 # Método AHP 
 
@@ -110,37 +108,95 @@ A continuación se establecen las siguientes matrices de comparación por pareja
 
 #### Nivel 1 - Criterios
 
+En cuanto a los criterios, atendiendo a las indicaciones dadas por el arquitecto, se ha establecido la siquiente matriz de comparaciones dos a dos. 
+
 `{r} tbahp0101`
+
+Se ha valorado la calidad de imagen como de importancia muy fuerte sobre el precio y moderada sobre la experiencia de usuario, además de importancia fuerte de la experiencia de usuario sobre el precio. De esta forma relegamos el precio como criterio de menor importancia, lejos de la calidad de imagen (en primer lugar) y de la experiencia de usuario (segundo lugar).
 
 #### Nivel 2 - Subcriterios:
 
-##### Coste:
+##### **Coste:**
+Los subcriterios dentro del coste eran precio y consumo, vemos su comparación dos a dos en esta tabla.
+
 `{r} tbahp0201`
-##### Calidad de Imagen:
+
+Se considera que el precio es fuertemente más relevante que el consumo, pues el arquitecto tendría que pasar muchos años sin renovar este monitor para que el consumo tenga incidencia real en el coste del monitor.
+
+##### **Calidad de Imagen:**
+Los subcriterios que conforman la calidad de imagen son comparados dos a dos en la siguiente tabla.
+
 `{r} tbahp0202`
-##### Experiencia de Usuario: 
+
+La resolución y la densidad son dos parámetros prácticamente de igual importancia, definen la calidad de un monitor conjuntamente, pero queremos que la resolución tenga una incidencia levemente superior en el resultado final. Por ello ambos subcriterios son más fuertes en relevancia que los otros dos, ajustándose los valores sobre los otros criterios a esta sutil diferencia entre resolución y densidad de píxeles. Por su parte, la cantidad de colores será algo más relevante que el brillo y le hemos dado una imporancia moderada sobre este.
+
+##### **Experiencia de Usuario:**
+
+La siguiente tabla muestra los subcriterios de la experiencia de usuario, tamaño y frecuencia de actualización.
+
 `{r} tbahp0203`
+
+La importancia del tamaño sobre la frecuencia de actualización es moderada, el arquitecto pasa muchas horas delante del ordenador y la necesidad de una buena frecuencia, que ayude a un menor cansancio visual, es de casi la misma relevancia que un buen tamaño para el trabajo multitarea.
 
 #### Nivel 3 - Alternativas:
 
-##### Precio:
+A continuación, se comparan las alternativas para todos los subcriterios. Se añade un pequeño comentario acerca del criterio seguido.
+
+##### **Precio:**
+
+Se ha intentado dar la relevancia de los precios acorde a las diferencias de precio entre los monitores, de esta forma las alternativas más caras tienen relevancia casi idéntica entre si, la opción más económica oscila entre preferencias fuertes y extremas con el resto de monitores. Y las opciones intermedias oscilan entre preferencias moderadas y muy fuertes sobre las alternativas más caras.
+
 `{r} tbahp0301`
-##### Consumo:
+
+##### **Consumo:**
+
+En cuanto al consumo, una opción destaca sobre las demás. Con 21W frente a 35W de la siguiente alternativa en menor consumo. Por ello su preferencia va desde muy fuerte hasta extrema sobre el resto de opciones. El resto de alternativas con consumos muy similares tienen preferencias entre muy moderadas y casi fuertes.
+
 `{r} tbahp0302`
-##### Resolución:
+
+##### **Resolución:**
+
+En la resolución tenemos 3 grupos, y todas las preferencias son las mismas para las alternativas en cada grupo. Las de resolución más alta tienen preferencia extrema sobre la de resolución más baja y fuerte sobre las de resolución media. Mientras, las de resolución media tienen preferencia moderada sobre las de resolución baja.
+
 `{r} tbahp0303`
-##### Densidad:
+
+##### **Densidad:**
+
+Para la densidad se ha intentado asignar la preferencia según los ppi de cada monitor, cuanto mayor es esta cifra sobre la de la alternativa a comparar, más fuerte será la preferencia sobre ella.
+
 `{r} tbahp0304`
-##### Brillo:
+
+##### **Brillo:**
+
+Para el brillo se ha optado por un criterio similar al de la resolución.
+
 `{r} tbahp0305`
-##### Colores:
+
+##### **Colores:**
+
+En cuanto a la comparación dos a dos de la cantidad de colores (millones), se han hecho dos grupos. Los que tienen +1000 colores y los que tienen 16.7, así los del primer grupo tendrán una preferencia muy fuerte sobre los del segundo.
+
 `{r} tbahp0306`
-##### Tamaño:
+
+##### **Tamaño:**
+
+Criterio similar al de la resolución, pantallas en torno a las 40" preferencias muy fuertes sobre las de 27" y fuertes sobre la de 31.5". Pantalla de 31.5" preferencia moderada sobre las de 27".
+
 `{r} tbahp0307`
-##### Frecuencia:
+
+##### **Frecuencia:**
+
+Criterio similar al del precio, dando la preferencia según el valor de la frecuencia de cada monitor.
+
 `{r} tbahp0308`
 
+## Desarrollo del problema {#cambioAHP}
+
+::: {.panel-tabset}
+
 ## AHP con R
+
+# AHP con R
 
 ### Introducción de las matrices en R
 
@@ -277,6 +333,14 @@ tabla_inconsistencia_ahp <- data.frame(
 
 ```
 
+Si alguna de las matrices de comparación hubiese dado un coeficiente de inconsistencia mayor a 0.1, tendríamos que haber revisado la matriz en cuestión para asegurarnos de que las relaciones lógicas entre las alternativas se han respetado. En nuestro caso, su realización ha sido meticulosa y la consistencia se ha podido cumplir sin rehacer las tablas.
+
+### Cálculo de los pesos
+
+#### **Criterios:**
+
+En primer lugar vamos a calcular los pesos finales para el último nivel de criterios y subcriterios, para ello multiplicaremos la valoración de cada criterio por la valoración de cada uno de los subcriterios que lo componen.
+
 ```{r}
 # Preparación matriz criterios*subcriterios
 
@@ -292,62 +356,140 @@ c32 <- lista_pesos$Criterios$valoraciones.ahp[3] * lista_pesos$Experiencia$valor
 criterios_subcriterios <- c(c11,c12,c21,c22,c23,c24,c31,c32)
 names(criterios_subcriterios) <- nombres_matrices[5:12]
 
+```
+
+Los podemos ver en la siguiente tabla.
+
+```{r}
+
+tabla_criterios_subcriterios <- crea_tabla_estilo(data.frame(
+                    Criterios = names(criterios_subcriterios),
+                    Peso = criterios_subcriterios
+                    ), nombresfila = FALSE)
+tabla_criterios_subcriterios
+
+```
+
+#### **Alternativas:**
+
+Vamos ahora a calcular los pesos finales para cada alternativa, donde un mayor peso indicará preferencia sobre alternativas con menor ponderación final.
+```{r}
 mat_pesos_alternativas <- matrix(c(
                             sapply(lista_pesos[5:12],function(x) x$valoraciones.ahp)
                             ),
                             ncol = 5, nrow = 8, byrow = TRUE)
 
-ponderaciones_final <- criterios_subcriterios %*% mat_pesos_alternativas
+ponderaciones_final <- data.frame((criterios_subcriterios %*% mat_pesos_alternativas))
 colnames(ponderaciones_final) <- datos$Modelo
 
-ponderaciones_final
+```
+
+También los mostramos en una tabla:
+
+```{r}
+
+tabla_ponderación_final <- crea_tabla_estilo(ponderaciones_final, nombresfila = FALSE)
+tabla_ponderación_final
 
 ```
 
 ## AHP con paquete
 
-En primer lugar tenemos que crear el archivo ahp que almacena el modelo necesario para este paquete.
+# AHP con paquete
+
+### Preparación del modelo
+
+En primer lugar tenemos que crear el archivo ahp que almacena el modelo necesario para este paquete, se encuentra en la raíz del proyecto y lo cargamos con ayuda del paquete ahp. Además vamos a calcular las prioridades, pero no vamos a mostrar el modelo en el documento.
 
 ```{r}
+
 modelo_ahp <- ahp::Load("modelo_monitores.ahp")
-modelo_ahp
-
 #Paso 2. Calcular las prioridades
-Calculate(modelo_ahp,pairwiseFun = )
-print(modelo_ahp, priority = function(x) x$parent$priority["Total", x$name])
+Calculate(modelo_ahp)
+# print(modelo_ahp, priority = function(x) x$parent$priority["Total", x$name])
+```
 
+### Jerarquía de los criterios
+
+Para observar que el modelo se ha introducido correctamente, y para una mejor comprensión nos vamos a apoyar del siguiente grafo, que nos permite observar la jerarquía de los criterios, los subcriterios y las alternativas.
+
+```{r}
 #Paso 3. Visualizar la jerarquía
-Visualize(modelo_ahp)
-
-#Paso 4. Analizar
-Analyze(modelo_ahp,variable = "priority" ,sort="orig")
-#Paso 4b. alternativo
-Analyze(modelo_ahp)
-#Paso 5. Analizar con Tabla Mejorada
-aa = AnalyzeTable(modelo_ahp)
-formattable::as.htmlwidget(aa)
-#Paso 5b. alternativo
-aa = AnalyzeTable(modelo_ahp,variable = "priority",sort = "orig")
-formattable::as.htmlwidget(aa)
+Visualize(modelo_ahp, 
+          criteriaNodesStyle = list(
+                                style = "filled, rounded",
+                                penwidth = 3,
+                                color = "#C3625B",
+                                fillcolor = "#F8A29E" ,
+                                shape = "box",
+                                fontname = "sans-serif"), 
+          alternativeNodesStyle = list(
+                                style = "filled, rounded",
+                                penwidth = 3,
+                                color = "#005682",
+                                fillcolor = "#7FBFF5" ,
+                                shape = "box",
+                                fontname = "sans-serif"))
 
 ```
 
+### Análisis
+
+En este último paso vamos a análizar el modelo, para ello vamos a mostrar en dos tablas los resultados para este modelo. También hay una opción en el paquete para mostrar este resultado sin tabla, se ha escogido la opción con tabla por facilitar su lectura e interpretación. Así no mostramos resultados repetidos.
+
+```{r}
+# Tabla "priority"
+aa = AnalyzeTable(modelo_ahp,variable = "priority",sort = "orig", weightColor = "#F8A29E", consistencyColor = "#C6AA74", alternativeColor = "#7FBFF5")
+formattable::as.htmlwidget(aa)
+```
+
+Esta primera tabla muestra en cada fila de los subcriterios el peso que tiene cada alternativa en ese subcriterio, facilita ver con claridad que alternativa se desempeña mejor en cada subcriterio.
+En la columna "Priority" podemos ver el desglose de los pesos, primero como se reparte la prioridad total entre cada criterio (Coste un 7'2%, Calidad un 64'9% y Experiencia de usuario un 27'9%) y segundo el mismo reparto en cada subcriterio. Es decir, nos muestra el porcentaje de prioridad dentro de cada grupo. Además del cálculo de la inconsistencia en la última columna.
+
+
+```{r}
+#Tabla pesos
+aa = AnalyzeTable(modelo_ahp, sort = "orig", weightColor = "#F8A29E", consistencyColor = "#C6AA74", alternativeColor = "#7FBFF5")
+formattable::as.htmlwidget(aa)
+```
+
+En esta otra se ven los pesos para cada monitor (ponderaciones finales) en la primera fila, además la fila de cada criterio muestra cuanto del peso total viene dado por este criterio para cada alternativa, de forma que la suma de los porcentajes de cada alternativa en esos criterios es el peso asignado a cada alternativa, y de igual forma para los subcriterios. Así para la alternativa elegida: Peso a1 = 34,2%, Coste (0,3%) + Calidad (24,6%) + Experiencia (9,3%), análogo para los subcriterios, nos permite observar cuanto ha influido cada criterio/subcriterio para el peso final de las alternativas.
+Esta tabla contiene los resultados que hemos obtenido con las funciones de clase la ya mencionada primera fila y en la columna "Weight" si nos fijamos en las filas de los subcriterios, encontramos los pesos que hemos obtenido para el último nivel de la jerarquía de criterios.
+
+
+### Uso de la aplicación shiny
 ```{r}
 #| eval: false
 ahp::RunGUI()
 ```
 
-Para los métodos siquientes se van a emplear los pesos que hemos calculado usando el método AHP, de forma que podamos comparar los distintos métodos y sus resultados. Los teníamos almacenados en el vector criterios_subcriterios.
+Se adjuntan algunas capturas que se han realizado mientras se utilizaba la aplicación shiny para este problema. Los resultados son iguales a los obtenidos en el código aquí expuesto.
 
-```{r}
-criterios_subcriterios
-```
+![Cargar el modelo](AHP-Shiny/Shiny1.png)
+![Jerarquía](AHP-Shiny/Shiny2.png)
+![Tablas resultado](AHP-Shiny/Shiny3.png)
+
+:::
+
+<div style="text-align: right;">
+<a href="#cambioAHP" class="btn-custom">Cambiar desarrollo AHP</a>
+</div>
+
+## Conclusiones AHP
+
+Podemos decir que obtenemos dos conclusiones principales tras el análisis de este problema multicriterio con AHP. Ambos métodos usados (funciones de clase y paquete ahp) deben ofrecer, y ofrecen, los mismos resultados.
+
+La primera es relativa a los pesos que se han asignado a los criterios con los que empezábamos el problema (tras utilizar la jerarquía por niveles). Estos pesos serán válidos para otros métodos de decisión multicriterio y consideramos el método AHP como consistente a la hora de obtener pesos (también) para otros métodos.
+
+La segunda es relativa a las ponderaciones finales de cada una de las alternativas, y esto se traduce en que la mejor alternativa es el modelo "LG Ultrafine 40WT95UF" con un peso del 34'28%. La que será nuestra decisión final. Además la segunda alternativa preferida sería el modelo "Samsung UJ59" con un peso del 26'41%. Esta información la emplearemos para comparar los métodos posteriormente.
 
 # Método ELECTRE
 
+## Planteamiento para el método ELECTRE
+
 ### Matriz de decisión
 
-Se establece la matriz de decisión, tenemos que hacer negativos los valores que se van a minimizar.
+Se establece la matriz de decisión, tenemos que hacer negativos los valores que se van a minimizar. Esta matriz de decisión será empleada en los métodos posteriores.
 
 ```{r}
 
@@ -359,20 +501,22 @@ matriz_decisión <- multicriterio.crea.matrizdecision(
                       -290,-37,2160,139,270,1000,31.5,60
                     ), 
                     numalternativas = 5,
-                    numcriterios = 8
+                    numcriterios = 8,
+                    v.nombresalt = names(ponderaciones_final),
+                    v.nombrescri = names(criterios_subcriterios)
 )
 
 matriz_decisión
 
 ```
 
-### Establecemos los parámetros para el método
+### Parámetros para el método
 
 #### Pesos
 
-Como se ha mencionado anteriormente, vamos a emplear los pesos que hemos obtenido tras emplear el método AHP para los criterios y subcriterios
+Como se ha mencionado anteriormente, vamos a emplear los pesos que hemos obtenido tras emplear el método AHP para los criterios y subcriterios.
 
-# Mostrar en una tabla estos pesos
+`{r} tabla_criterios_subcriterios`
 
 #### Test de concordancia
 
@@ -398,6 +542,8 @@ Además se considera que estas cantidades deberían ser ajustadas e introducidas
 
 Algunas de las cantidades propuestas, como la resolución, serían adecuadas para este problema. La no influencia en el resultado final ha desincentivado su inclusión.
 
+## Desarrollo del método ELECTRE
+
 ### Primera iteración
 ```{r}
 
@@ -408,18 +554,19 @@ iteración1_ELECTRE <- multicriterio.metodoELECTRE_I(matriz_decisión,
                                                     que.alternativas = TRUE
 )
 
-iteración1_ELECTRE$nucleo_aprox
-qgraph::qgraph(iteración1_ELECTRE$relacion.dominante)
+alternativas_iteración1_ELECTRE <- iteración1_ELECTRE$nucleo_aprox
 
+tabla_alternativas_nombre <- data.frame(`Alternativa número` = c(1:5),
+                                        Modelo = names(ponderaciones_final))
 construir_grafo_animado(iteración1_ELECTRE$relacion.dominante, plantilla = "spring")
 
-test <- func_ELECTRE_Completo(iteración1_ELECTRE)
+resultados_iteración1_ELECTRE <- func_ELECTRE_Completo(iteración1_ELECTRE)
 
 ```
 
-Vemos que para este valor de alfa, las mejores alternativas son a1 y a3. Y observando el grafo podríamos concluir que la siguiente mejor opción es a5.
+Vemos que para este valor de alfa, las mejores alternativas son `{r} alternativas_iteración1_ELECTRE`. Observando el grafo, vemos que son las únicas alternativas que no son dominadas por otras, además podríamos concluir que la siguiente mejor opción es a5.
 
-Vamos a reducir el valor de alfa y nos vamos 
+Vamos a reducir el valor de alfa y nos vamos a quedar con estas dos alternativas para la segunda iteración.
 
 ```{r}
 iteración2_ELECTRE <- multicriterio.metodoELECTRE_I(matriz_decisión, 
@@ -429,36 +576,40 @@ iteración2_ELECTRE <- multicriterio.metodoELECTRE_I(matriz_decisión,
                                                     que.alternativas = c(1,3)
 )
 
-iteración2_ELECTRE$nucleo_aprox
-qgraph::qgraph(iteración2_ELECTRE$relacion.dominante, color = "#F8A29E", edge.color = "#005682" , edge.width = 1)
+alternativas_iteración2_ELECTRE <- iteración2_ELECTRE$nucleo_aprox
 
-
-posiciones <- qgraph::qgraph(iteración1_ELECTRE$relacion.dominante, layout = "spring")
-
-animacion <- qgraph::qgraph.animate(iteración1_ELECTRE$relacion.dominante, color = "#F8A29E", edge.color = "#005682" , edge.width = 1, constraint = Inf,
-growth = "order", sleep = 0, smooth = TRUE, plotGraphs = FALSE, progress = FALSE, initLayout = posiciones$layout)
-
-img_list <- lapply(animacion, function(g) {
-  tmpfile <- tempfile(fileext = ".png")
-  png(tmpfile, width = 600, height = 600)
-  plot(g)
-  dev.off()
-  magick::image_read(tmpfile)
-})
-
-gif <- magick::image_animate(magick::image_join(img_list), fps = 0.5)
-gif
-magick::image_write(gif, "animacion_electre.gif")
+construir_grafo(iteración2_ELECTRE$relacion.dominante, que.alternativas = c(1,3))
 
 ``` 
 
-Vemos que para este valor de alfa, las mejores alternativas son a1 y a3. Y observando el grafo podríamos concluir que la siguiente mejor opción es a5.
+Se puede observar que para $\alpha$ = 0.6 no hay dominancia de ninguna de estas alternativas sobre la otra. Vamos a reducir su valor una vez más y volvemos a aplicar el método.
 
-Vamos a reducir el valor de alfa y las 
+```{r}
+iteración3_ELECTRE <- multicriterio.metodoELECTRE_I(matriz_decisión, 
+                                                    pesos.criterios = criterios_subcriterios,
+                                                    nivel.concordancia.minimo.alpha = 0.55,
+                                                    no.se.compensan = c(Inf,Inf,Inf,Inf,50,100,3,Inf),
+                                                    que.alternativas = c(1,3)
+)
+
+alternativas_iteración3_ELECTRE <- iteración3_ELECTRE$nucleo_aprox
+
+construir_grafo(iteración3_ELECTRE$relacion.dominante, que.alternativas = c(1,3))
+``` 
+
+Con este valor de $\alpha$ podemos ver que la alternativa `{r} names(alternativas_iteración3_ELECTRE)` domina a la alternavita `{r} names(alternativas_iteración2_ELECTRE)[-1]`.
+
+## Conclusiones del método ELECTRE
+
+Hemos observado que la mejor alternativa es a1, siendo la segunda mejor alternativa a3. Este método es menos flexible....
 
 # Método PROMETHEE
 
-## Tab
+## Pesos
+
+Vamos a emplear los pesos calculados en AHP para el último nivel de la jerarquía de criterios y subcriterios.
+
+`{r} tabla_criterios_subcriterios`
 
 ### Funciones de preferencia
 
@@ -466,7 +617,7 @@ Para cada criterio vamos a elegir una función de preferencia según la naturale
 
 * **Precio:** El precio no está entre los requisitos más importantes, pero queremos que tenga algo de indicencia en la decisión final, querríamos que para cantidades con diferencias pequeñas no exista preferencia alguna. Por ello vamos a tomar un valor de Q= 50€
 
-* **Consumo:** El coste anual que supone una diferencia de 10W trabajando es de 2.4€; Cálculo: 10W = 0.01 kW, 6 horas al día todos los días, 0.01 kW x 6 x 365 = 21.90 kWh anuales. Con el precio medio actual 0.1090 €/kWh: 21.90 kWh x 0.1090 €/kWh = 2.3871€. Esto motiva que sigamos optemos por el Cuasi-Criterio. Con no preferencia en todas las diferencias menores que Q = 10W.
+* **Consumo:** El coste anual que supone una diferencia de 10W trabajando es de 2.4€; Cálculo: 10W = 0.01 kW, 6 horas al día todos los días, 0.01 kW x 6 x 365 = 21.90 kWh anuales. Con el precio medio actual 0.1090 €/kWh: 21.90 kWh x 0.1090 €/kWh = 2.3871€. Esto motiva que optemos por el Cuasi-Criterio. Con no preferencia en todas las diferencias menores que Q = 10W.
 
 * **Resolución:** Aquí queremos que haya dominancia absoluta en aquellos valores que superen a otros por 720 px, de esta forma establecemos niveles bien diferenciados según la resolución. Preferencia lineal
 
@@ -480,9 +631,9 @@ Para cada criterio vamos a elegir una función de preferencia según la naturale
 
 * **Frecuencia:** La frecuencia de refresco sigue una escala particular, normalmente saltos de 30 Hz se hacen notar bastante hasta cierta cantidad de Hz que los saltos deben ser mayores para que se note. Como para el arquitecto es un factor secundario, vamos a tomar que diferencias menores a 20 Hz no supondrán preferencia de una alternativa sobre otra y que saltos de 59 Hz si harán que escojamos una alternativa con preferencia absoluta. Para los valores intermedios queremos un reparto suavizado, vamos a tomar S = 60 Hz
 
+Creamos la matriz de preferencia con estos valores.
 
 ```{r}
-
 tabla_preferencia <- matrix(c(2,50,0,0, 
                               2,10,0,0, 
                               3,0,720,0,
@@ -506,6 +657,7 @@ resultado_Promethee_I <- multicriterio.metodo.promethee_i(matriz_decisión,
 resultado_Promethee_I$tabla.indices
 resultado_Promethee_I$tablarelacionsupera
 qgraph::qgraph(resultado_Promethee_I$tablarelacionsupera, color = "#F8A29E", edge.color = "#005682" , edge.width = 0.5)
+construir_grafo_animado(resultado_Promethee_I$tablarelacionsupera, plantilla = "circle")
 ```
 
 ### Medias
@@ -533,8 +685,83 @@ source("teoriadecision_funciones_multicriterio_utiles.R")
 test <- multicriterio.metodo.promethee_windows_kableExtra_html(resultado_Promethee_II_Win)
 test$tabEscenario
 test$tabAcciones
+
+
 ```
+
+
+###
 
 # Método axiomático de Arrow y Raymond
 
+```{r}
+
+intalpha <- seq(1,2,0.1)
+sols <- vector("list",length(intalpha))
+sols_pasos <- vector("list",length(intalpha))
+for (i in 1:length(intalpha)) {
+Mat_i <- matriz_decisión
+Mat_i[1,] <- Mat_i[1,] * intalpha[i]
+sol_ArrowRaymond_i <- multicriterio.metodoaxiomatico.ArrowRaymond(Mat_i)
+sols[[i]] <- sol_ArrowRaymond_i$alternativasordenadas
+sols_pasos[[i]] <- sol_ArrowRaymond_i$pasos
+}
+
+sols_pasos[[1]][[4]]$Mclasificacion
+
+```
+
+Posiciones de las alternativas a lo largo del vector alfas
+
+```{r}
+
+observar_posiciones <- function(valfas, alter, solu){
+posiciones = rep(NA,length(valfas))
+for (i in 1:length(valfas)) {
+#i = 1
+posiciones[i] = which(solu[[i]]==alter)
+}
+return(posiciones)
+}
+
+lista_ArrowRaymond <-  lapply(names(ponderaciones_final), observar_posiciones, valfas=intalpha, solu=sols)
+
+
+
+
+```
+
+```{r}
+
+dataframe_ArrowRaymon <- lista_ArrowRaymond |> 
+  purrr::imap_dfr(~ tibble(
+    alpha = intalpha,
+    posicion = .x,
+    alternativa = paste0("a", .y)
+  ))
+
+
+ggplot(dataframe_ArrowRaymon, aes(x = alpha, y = posicion, color = alternativa)) +
+  geom_line(linewidth = 1.2) +
+  geom_point(size = 2) +
+  scale_color_manual(values = c("#005682", "#C3625B", "#2E8B57", "#E19C29", "#7B68EE")) +
+  labs(
+    title = "Evolución de posiciones por alternativa",
+    x = expression(alpha),
+    y = "Posición"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    legend.title = element_blank(),
+    legend.position = "top",
+    plot.title = element_text(face = "bold", hjust = 0.5),
+    panel.grid.minor = element_blank()
+  )
+
+```
+
 :::
+
+<div style="text-align: right;">
+<a href="#cambioMétodo" class="btn-custom">Cambiar método multicriterio</a>
+</div>

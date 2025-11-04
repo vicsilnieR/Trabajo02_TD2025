@@ -797,8 +797,10 @@ multicriterio.metodo.promethee_windows_kableExtra_html = function(res_promethee_
         row_spec(0, bold = TRUE, background = "#F8A29E") |> 
         column_spec(1, background = "#F8A29E", border_right = TRUE)
 
-    tab02 = kbl(res_promethee_windows$Acciones) |>
-        kable_paper("striped", full_width = F)
+    tab02 = kbl(res_promethee_windows$Acciones, booktabs = TRUE) |>
+        kable_paper("striped", full_width = F) |> 
+        row_spec(0, bold = TRUE, background = "#F8A29E") |> 
+        column_spec(1, background = "#F8A29E", border_right = TRUE)
 
     res = list(tabEscenario = tab01,
                tabAcciones = tab02)

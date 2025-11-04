@@ -20,18 +20,31 @@ h3,h4{ color: $color-hs; }
 /* Hover de las tablas tipo paper */
 
 .lightable-paper tr:hover {
-  background-color: #90caf9 !important; 
+  background-color: rgba(127, 191, 245, 0.4) !important; 
   color: #000000 !important;            
 }
 
 /* color del borde o sombra al hacer hover */
 .lightable-paper tr:hover td {
-  border-color: #90caf9 !important;    
+  border-color: rgba(127, 191, 245, 0.4) !important;    
 }
 
 /* Hover para TODAS las tablas de Kable */
 table.kable tr:hover {
-  background-color: #90caf9 !important;
+  background-color: rgba(127, 191, 245, 0.4) !important;
   color: #000 !important;
+}
+
+/* Botones desplazamiento por el documento */
+
+a.btn-custom {
+  background-color: #005682;
+  color: white;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  text-decoration: none;
+}
+a.btn-custom:hover {
+  background-color: #C3625B;
 }
 
