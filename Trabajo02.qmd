@@ -34,26 +34,40 @@ Y las alternativas las podemos ver en la siguiente tabla:
 
 # Carga de librerías necesarias
 library(DiagrammeR)
+library(kableExtra)
 library(ahp)
 
 # Carga de funciones multicriterio
-source("teoriadecision_funciones_multicriterio.R")
-source("teoriadecision_funciones_multicriterio_diagram.R")
-source("teoriadecision_funciones_multicriterio_utiles.R")
+source("funciones_clase/teoriadecision_funciones_multicriterio.R")
+source("funciones_clase/teoriadecision_funciones_multicriterio_diagram.R")
+source("funciones_clase/teoriadecision_funciones_multicriterio_utiles.R")
 
 # Carga otras funciones
-source("otras_funciones.R")
-source("tablas_planteamiento_AHP.R")
-source("animación_grafo.R")
+source("funciones_propias/otras_funciones.R")
+source("funciones_propias/tablas_planteamiento_AHP.R")
+source("funciones_propias/animación_grafo.R")
 
 ```
 
 ```{r}
-datos <- read.csv2("monitores.csv", header = FALSE, sep = ";")
+datos <- read.csv2("datos/monitores.csv", header = FALSE, sep = ";")
 colnames(datos) <- c("Modelo","Precio", "Tamaño", "Frecuencia", "Resolución", "Consumo", "Densidad", "Brillo", "Colores")
-unidades <- c("€", "pulgadas", "Hz", "px", "W", "ppi", "nits", "M")
 
 crea_tabla_estilo(datos, nombresfila = FALSE)
+
+ruta_imagenes <- c("datos/monitores/a1.png",
+                   "datos/monitores/a2.png",
+                   "datos/monitores/a3.png",
+                   "datos/monitores/a4.png",
+                   "datos/monitores/a5.png")
+
+data.frame(Modelo = datos[1],
+           Imágen = rep("", 5),
+           check.names = FALSE) |> 
+    kbl(booktabs = T, align = "c") |> 
+    kable_paper(full_width = T) |> 
+    column_spec(2, image = spec_image(ruta_imagenes, 280, 200)) |> 
+    row_spec(0, bold = TRUE, background = "#F8A29E")
 ```
 
 Este arquitecto busca un monitor que le permita trabajar con planos y renderizados de alta calidad. El precio le preocupa en poca medida, pero quiere un monitor que ofrezca buena resolución y una buena representación de colores. Además, valora un tamaño grande para facilitar su trabajo. En cuanto al consumo, quiere que sea lo más bajo posible, pero no lo valora especialmente.
@@ -393,6 +407,59 @@ tabla_ponderación_final
 
 ```
 
+Además se adjunta un grafo, mostrando como evolucionan los pesos en la jerarquía. Los pesos para cada eje se encuentran a su derecha.
+
+```{r}
+DiagrammeR::grViz("
+digraph {
+    node [shape = rectangle, style = 'rounded,filled', fontname = 'sans-serif', fontsize = '12']
+    A [label = 'Elección de un monitor', fillcolor = '#C7645D']
+    B [label = 'Coste', fillcolor = '#E2807A']
+    C [label = 'Calidad de Imagen', fillcolor = '#E2807A']
+    D [label = 'Experiencia de Usuario', fillcolor = '#E2807A']
+    E [label = 'Precio', fillcolor = '#F8A29E']
+    F [label = 'Consumo', fillcolor = '#F8A29E']
+    G [label = 'Resolución', fillcolor = '#F8A29E']
+    H [label = 'Densidad', fillcolor = '#F8A29E']
+    I [label = 'Brillo', fillcolor = '#F8A29E']
+    J [label = 'Colores', fillcolor = '#F8A29E']
+    K [label = 'Tamaño', fillcolor = '#F8A29E']
+    L [label = 'Frecuencia', fillcolor = '#F8A29E']
+    M [label = 'Alternativas', fillcolor = '#7FBFF5']
+    N [label = 'LG UltraFine 40WT95UF', fillcolor = '#7FBFF5']
+    O [label = 'Asus TUF Gaming VG27AQ3A', fillcolor = '#7FBFF5']
+    P [label = 'MSI MAG401QR', fillcolor = '#7FBFF5']
+    Q [label = 'Asus VZ27EHF', fillcolor = '#7FBFF5']
+    R [label = 'Samsung UJ59', fillcolor = '#7FBFF5']
+    edge[color = '#005A89', arrowsize = '0.5', fontname = 'sans-serif', fontsize = '10']
+    A -> B [label = '  0.0719']
+    A -> C [label = '  0.6491']
+    A -> D [label = '  0.279']
+    B -> E [label = '  0.833']
+    B -> F [label = '  0.167']
+    C -> G [label = '  0.523']
+    C -> H [label = '  0.299']
+    C -> I [label = '  0.057']
+    C -> J [label = '  0.121']
+    D -> K [label = '  0.75']
+    D -> L [label = '  0.25']
+    E -> M [label = '  0.06']
+    F -> M [label = '  0.012']
+    G -> M [label = '  0.34']
+    H -> M [label = '  0.194']
+    I -> M [label = '  0.037']
+    J -> M [label = '  0.08']
+    K -> M [label = '  0.209']
+    L -> M [label = '  0.07']
+    M -> N [label = '  0.343']
+    M -> O [label = '  0.129']
+    M -> P [label = '  0.186']
+    M -> Q [label = '  0.079']
+    M -> R [label = '  0.264']
+}")
+
+```
+
 ## AHP con paquete
 
 # AHP con paquete
@@ -505,9 +572,6 @@ matriz_decisión <- multicriterio.crea.matrizdecision(
                     v.nombresalt = names(ponderaciones_final),
                     v.nombrescri = names(criterios_subcriterios)
 )
-
-matriz_decisión
-
 ```
 
 ### Parámetros para el método
@@ -520,7 +584,7 @@ Como se ha mencionado anteriormente, vamos a emplear los pesos que hemos obtenid
 
 #### Test de concordancia
 
-El test de concordancia requiere un valor alfa que al ser reducido permite que más alternativas dominen a otras. El valor de alfa inicial que vamos a tomar es 0.7.
+El test de concordancia requiere un valor $\alpha$ que al ser reducido permite que más alternativas dominen a otras. El valor de $\alpha$ inicial que vamos a tomar es 0.7.
 
 #### Test de discordancia
 
@@ -555,18 +619,36 @@ iteración1_ELECTRE <- multicriterio.metodoELECTRE_I(matriz_decisión,
 )
 
 alternativas_iteración1_ELECTRE <- iteración1_ELECTRE$nucleo_aprox
-
-tabla_alternativas_nombre <- data.frame(`Alternativa número` = c(1:5),
-                                        Modelo = names(ponderaciones_final))
-construir_grafo_animado(iteración1_ELECTRE$relacion.dominante, plantilla = "spring")
-
-resultados_iteración1_ELECTRE <- func_ELECTRE_Completo(iteración1_ELECTRE)
-
 ```
 
-Vemos que para este valor de alfa, las mejores alternativas son `{r} alternativas_iteración1_ELECTRE`. Observando el grafo, vemos que son las únicas alternativas que no son dominadas por otras, además podríamos concluir que la siguiente mejor opción es a5.
+Visualizamos el núcleo aproximado del método
 
-Vamos a reducir el valor de alfa y nos vamos a quedar con estas dos alternativas para la segunda iteración.
+```{r}
+crea_tabla_estilo(data.frame(Núcleo = alternativas_iteración1_ELECTRE))
+```
+
+
+Vamos a mostrar también una tabla en la que vemos la correspondencia entre número de alternativa y el modelo al que corresponde puesto que habrá algunos resultados que muestren este número.
+
+```{r}
+tabla_alternativas_nombre <- data.frame(Modelo = names(ponderaciones_final),
+                                        `Alternativa número` = c(1:5),
+                                        check.names = FALSE)
+crea_tabla_estilo(tabla_alternativas_nombre, nombresfila = FALSE)
+```
+
+Y a continuación, el grafo.
+```{r}
+construir_grafo_animado(iteración1_ELECTRE$relacion.dominante, plantilla = "spring")
+```
+
+Vemos que para este valor de $\alpha$, las mejores alternativas son `{r} alternativas_iteración1_ELECTRE`. Observando el grafo, vemos que son las únicas alternativas que no son dominadas por otras, además podríamos concluir que la siguiente mejor opción es a5.
+
+Vamos a reducir el valor de $\alpha$ y nos vamos a quedar con estas dos alternativas para la segunda iteración.
+
+### Segunda iteración
+
+Vamos a mostrar el núcleo y el grafo.
 
 ```{r}
 iteración2_ELECTRE <- multicriterio.metodoELECTRE_I(matriz_decisión, 
@@ -577,6 +659,7 @@ iteración2_ELECTRE <- multicriterio.metodoELECTRE_I(matriz_decisión,
 )
 
 alternativas_iteración2_ELECTRE <- iteración2_ELECTRE$nucleo_aprox
+crea_tabla_estilo(data.frame(Núcleo = alternativas_iteración2_ELECTRE))
 
 construir_grafo(iteración2_ELECTRE$relacion.dominante, que.alternativas = c(1,3))
 
@@ -584,6 +667,9 @@ construir_grafo(iteración2_ELECTRE$relacion.dominante, que.alternativas = c(1,3
 
 Se puede observar que para $\alpha$ = 0.6 no hay dominancia de ninguna de estas alternativas sobre la otra. Vamos a reducir su valor una vez más y volvemos a aplicar el método.
 
+### Tercera iteración
+
+Mostramos el núcleo y el grafo una vez más.
 ```{r}
 iteración3_ELECTRE <- multicriterio.metodoELECTRE_I(matriz_decisión, 
                                                     pesos.criterios = criterios_subcriterios,
@@ -593,19 +679,22 @@ iteración3_ELECTRE <- multicriterio.metodoELECTRE_I(matriz_decisión,
 )
 
 alternativas_iteración3_ELECTRE <- iteración3_ELECTRE$nucleo_aprox
+crea_tabla_estilo(data.frame(Núcleo = alternativas_iteración3_ELECTRE))
 
 construir_grafo(iteración3_ELECTRE$relacion.dominante, que.alternativas = c(1,3))
 ``` 
 
-Con este valor de $\alpha$ podemos ver que la alternativa `{r} names(alternativas_iteración3_ELECTRE)` domina a la alternavita `{r} names(alternativas_iteración2_ELECTRE)[-1]`.
+Con este valor de $\alpha$ podemos ver que la alternativa `{r} names(alternativas_iteración3_ELECTRE)` domina a la alternativa `{r} names(alternativas_iteración2_ELECTRE)[-1]`.
 
 ## Conclusiones del método ELECTRE
 
-Hemos observado que la mejor alternativa es a1, siendo la segunda mejor alternativa a3. Este método es menos flexible....
+Hemos observado que la mejor alternativa es el monitor "`{r} names(ponderaciones_final)[1]`", siendo la segunda mejor alternativa el monitor "`{r} names(ponderaciones_final)[3]`". Este método no nos ha dejado la libertad que querríamos a la hora de comparar las alternativas, como se ha mencionado previamente. Y da como resultado que una alternativa con menos resolución que la máxima quede en tercera posición. Principalmente causado por no poder controlar que algunas características las podamos considerar iguales (por sus pequeñas diferencias) en el test de concordancia. Se recomienda al arquitecto optar por el modelo "`{r} names(ponderaciones_final)[1]`".
 
 # Método PROMETHEE
 
-## Pesos
+## Planteamiento para el método PROMETHEE
+
+### Pesos
 
 Vamos a emplear los pesos calculados en AHP para el último nivel de la jerarquía de criterios y subcriterios.
 
@@ -648,88 +737,162 @@ tabla_preferencia <- matrix(c(2,50,0,0,
 
 ## PROMETHEE I
 
+### Índices
+
+Vamos a utilizar la función de clase para este método, después se van a analizar los resultados. En primer lugar vamos a mostrar la tabla de índices, esta tabla nos indica en que grado se prefiere una alternativa frente a la otra por filas. Cuanto más cercano sea este valor a uno más fuerte será la preferencia global de la alternativa en la fila frente a la alternativa en la columna. 
 
 ```{r}
-resultado_Promethee_I <- multicriterio.metodo.promethee_i(matriz_decisión,
+resultado_Promethee_I <- multicriterio.metodo.promethee_i_med(matriz_decisión,
                                                         criterios_subcriterios,
                                                         tabla_preferencia)
 
-resultado_Promethee_I$tabla.indices
-resultado_Promethee_I$tablarelacionsupera
-qgraph::qgraph(resultado_Promethee_I$tablarelacionsupera, color = "#F8A29E", edge.color = "#005682" , edge.width = 0.5)
+data.frame(resultado_Promethee_I$tabla.indices,
+           check.names = FALSE) |> crea_tabla_estilo_comparación()
+```
+
+### Flujos entrante y saliente
+
+Vamos a mostrar una tabla que recoge los valores para el flujo entrante y saliente de cada alternativa, se emplean para crear el orden parcial de las alternativas. Los casos en los que una alternativa supera a otra para estos flujos se ha visto en clase. En el siguiente apartado mostramos una tabla que usando estos valores nos indica la dominancia.
+
+```{r}
+tabla_flujos <- data.frame(Alternativa = names(ponderaciones_final),
+                           `Flujo entrante` = resultado_Promethee_I$vflujos.ent,
+                           `Flujo saliente` = resultado_Promethee_I$vflujos.sal,
+                           check.names = FALSE)
+crea_tabla_estilo(tabla_flujos, nombresfila = FALSE)
+```
+
+### Resultado
+
+A continuación, vamos a mostrar una tabla que muestra que alternativas dominan a otras. La alternativa que a más alternativas domine y menos dominada sea será la preferida. Además se añade un grafo que ilustra el resultado de esta tabla, facilitando la interpretación e identificación de las mejores alternativas.
+
+```{r}
+
+crea_tabla_estilo_comparación(data.frame(resultado_Promethee_I$tablarelacionsupera,
+                                         check.names = FALSE))
 construir_grafo_animado(resultado_Promethee_I$tablarelacionsupera, plantilla = "circle")
 ```
 
-### Medias
+Recordamos que alternativa correspondía a cada modelo
 
-```{r}
-resultado_Promethee_I_medias <- multicriterio.metodo.promethee_i_med(matriz_decisión, criterios_subcriterios, tabla_preferencia)
-
-qgraph::qgraph(resultado_Promethee_I_medias$tablarelacionsupera)
-```
+`{r} crea_tabla_estilo(tabla_alternativas_nombre, nombresfila = FALSE)`
 
 ## PROMETHEE II
 
+### Índices
+
+Para este método vamos a ultilizar dos funciones diferentes, una que imita la salida del software visual PROMETHEE y otra que nos da los resultados de forma similar al utilizado en el método anterior. En primer lugar vamos a mostrar el escenario que hemos planteado con la salida tipo visual PROMETHEE tras hacer uso de ambas funciones para guardar los resultados.
 
 ```{r}
 
-resultado_Promethee_II <- multicriterio.metodo.promethee_ii(matriz_decisión, criterios_subcriterios, tabla_preferencia)
-
-resultado_Promethee_II$vflujos.netos
-
-qgraph::qgraph(resultado_Promethee_II$tablarelacionsupera)
-
+resultado_Promethee_II <- multicriterio.metodo.promethee_ii_med(matriz_decisión, criterios_subcriterios, tabla_preferencia)
 resultado_Promethee_II_Win <- multicriterio.metodo.promethee_windows(matriz_decisión, tabla_preferencia, criterios_subcriterios, c(rep("min",2),rep("max",6)))
-    
-source("teoriadecision_funciones_multicriterio_utiles.R")
-test <- multicriterio.metodo.promethee_windows_kableExtra_html(resultado_Promethee_II_Win)
-test$tabEscenario
-test$tabAcciones
 
+tablas_resultado_Promethee_II_Win <- multicriterio.metodo.promethee_windows_kableExtra_html(resultado_Promethee_II_Win)
 
+tablas_resultado_Promethee_II_Win$tabEscenario
 ```
 
+Esta tabla nos muestra tres bloques, el primer bloque de preferencias nos muestra un resumen de los parámetros que hemos establecido en el enunciado. El segundo bloque, estadísticas, nos da un resumen descriptivo de las evaluaciones. Dichas evaluaciones se encuentran en el tercer bloque.
 
-###
+### Resultado
+
+Ahora vamos a mostrar la tabla de flujos netos, que es la diferencia entre los flujos entrantes y salientes que veíamos en el resultado anterior. Vamos a mostrar dos tablas distintas que representan lo mismo, cada una para los resultados ofrecidos por las distintas funciones. Como para el desarrollo del problema con funciones de clase hemos empleado aquellas que normalizan los flujos, el resultado obtenido es el mismo, de no haberlas normalizado podríamos obtener valores distintos para los flujos.
+
+#### Tabla resultado funciones_win
+```{r}
+tablas_resultado_Promethee_II_Win$tabAcciones
+```
+
+#### Tabla resultado funciones_clase
+
+```{r}
+tabla_flujos_netos <-  data.frame(Alternativa = names(ponderaciones_final),
+                                  `Flujo neto` = resultado_Promethee_II$vflujos.netos,
+                                   check.names = FALSE)
+
+crea_tabla_estilo(tabla_flujos_netos, nombresfila = FALSE)
+```
+
+Además para el resultado, también añadimos un grafo que nos ayuda a identificar las dominancias entre alternativas junto a los flujos netos.
+
+```{r}
+construir_grafo_animado(resultado_Promethee_II$tablarelacionsupera, plantilla = "circle")
+```
+
+Recordamos que alternativa correspondía a cada modelo
+
+`{r} crea_tabla_estilo(tabla_alternativas_nombre, nombresfila = FALSE)`
+
+## Conclusión
+
+Podemos comprobar que la mejor alternativa bajo los pesos establecidos para el problema y empleando este método es el modelo "`{r} names(ponderaciones_final)[1]`". Seguido del modelo "`{r} names(ponderaciones_final)[5]`" y como tercera opción el "`{r} names(ponderaciones_final)[3]`". En promethee I no hemos tenido el caso de que dos alternativas (o más) fueran incomparables por lo que esta conclusión es apta para ambos, PROMETHEE I y II. Se recomienda entonces al arquitecto adquirir el modelo "`{r} names(ponderaciones_final)[1]`".
 
 # Método axiomático de Arrow y Raymond
+
+## Planteamiento para Arrow y Raymond
+
+Este método no emplea pesos, compara todas las alternativas entre ellas para cada criterio y hace una tabla que acumula cantidad de criterios en los que una alternativa (fila) supera a las demás (columnas).
+
+Además se puede realizar un análisis de sensibilidad, multiplicando la primera alternativa (en este caso) por un valor $\alpha$ mayor o igual a uno que mejora los valores de esa alternativa progresivamente. De esta forma podemos observar como su variación afecta al orden final.
+
+Vamos a hacer el análisis de sensibilidad a la vez que aplicamos el método y el resultado para el método será la primera iteración del análisis con $\alpha$ = 1, que no modifica la alternativa.
+
+## Desarrollo
+
+Vamos a mostrar la matriz de superaciones en las iteraciones primera y última del método, recordemos que este método va reduciendo las alternativas a medida que itera. Quedando en el último paso la alternativa preferida.
 
 ```{r}
 
 intalpha <- seq(1,2,0.1)
-sols <- vector("list",length(intalpha))
-sols_pasos <- vector("list",length(intalpha))
+sols <- vector("list", length(intalpha))
+sols_pasos <- vector("list", length(intalpha))
+
 for (i in 1:length(intalpha)) {
 Mat_i <- matriz_decisión
-Mat_i[1,] <- Mat_i[1,] * intalpha[i]
+Mat_i[4,] <- Mat_i[4,] * intalpha[i]
 sol_ArrowRaymond_i <- multicriterio.metodoaxiomatico.ArrowRaymond(Mat_i)
 sols[[i]] <- sol_ArrowRaymond_i$alternativasordenadas
 sols_pasos[[i]] <- sol_ArrowRaymond_i$pasos
 }
-
-sols_pasos[[1]][[4]]$Mclasificacion
-
 ```
 
-Posiciones de las alternativas a lo largo del vector alfas
+Aquí vemos la tabla para la primera iteración:
+
+```{r}
+data.frame(sols_pasos[[1]][[1]]$Mclasificacion,
+           check.names = FALSE) |> crea_tabla_estilo_comparación()
+```
+
+Ahora mostramos la tabla de la última iteración
+
+```{r}
+data.frame(sols_pasos[[1]][[4]]$Mclasificacion,
+           check.names = FALSE) |> crea_tabla_estilo_comparación()
+```
+
+En esta tabla ya se puede observar el resultado del método, pero vamos a visualizarla de más formas.
+
+## Análisis de sensibilidad
+
+Para el análisis de sensibilidad vamos a mostrar el gráfico que muestra la evolución de la cuarta alternativa según aumenta $\alpha$. Se ha escogido esta alternativa por ser la peor inicialmente.
 
 ```{r}
 
 observar_posiciones <- function(valfas, alter, solu){
-posiciones = rep(NA,length(valfas))
-for (i in 1:length(valfas)) {
-#i = 1
-posiciones[i] = which(solu[[i]]==alter)
-}
+    posiciones = rep(NA,length(valfas))
+    for (i in 1:length(valfas)) {
+    #i = 1
+        posiciones[i] = which(solu[[i]]==alter)
+    }
 return(posiciones)
 }
 
 lista_ArrowRaymond <-  lapply(names(ponderaciones_final), observar_posiciones, valfas=intalpha, solu=sols)
 
-
-
-
 ```
+
+Recordemos que las primeras posiciones que se visualizan ($\alpha$ = 1) representan el resultado del método.
 
 ```{r}
 
@@ -744,7 +907,7 @@ dataframe_ArrowRaymon <- lista_ArrowRaymond |>
 ggplot(dataframe_ArrowRaymon, aes(x = alpha, y = posicion, color = alternativa)) +
   geom_line(linewidth = 1.2) +
   geom_point(size = 2) +
-  scale_color_manual(values = c("#005682", "#C3625B", "#2E8B57", "#E19C29", "#7B68EE")) +
+  scale_color_manual(values = c("#005682", "#C3625B", "#7FBFF5", "#F8A29E", "#111111")) +
   labs(
     title = "Evolución de posiciones por alternativa",
     x = expression(alpha),
@@ -760,8 +923,40 @@ ggplot(dataframe_ArrowRaymon, aes(x = alpha, y = posicion, color = alternativa))
 
 ```
 
+En el gráfico podemos ver claramente como se ordenan las alternativas en este método, en cuanto a la sensibilidad podemos decir que las mejores opciones sostienen su posición frente a incrementos de hasta el 40% en la peor alternativa. Sin embargo, incrementos pequeños hacen que las alternativas en tercera y cuarta posición sean adelantadas rápidamente. Por ello, el resultado en nuestro caso es sensible a cambios en las evaluaciones de las alternativas o la inclusión de otras alternativas.
+
+## Conclusiones
+
+Este método nos indicaría que la mejor alternativa es el monitor "`{r} names(ponderaciones_final)[3]`" y la segunda mejor, el monitor, "`{r} names(ponderaciones_final)[1]`". Con este método recomendaríamos al arquitecto optar por la mejor alternativa, "`{r} names(ponderaciones_final)[3]`". Pero como veremos a continuación no lo consideraremos el mejor método para tomar la decisión.
+
 :::
 
 <div style="text-align: right;">
 <a href="#cambioMétodo" class="btn-custom">Cambiar método multicriterio</a>
 </div>
+
+# Conclusión final
+
+## Comparación de los métodos
+
+Para comparar los métodos, en primer lugar se va a adjuntar una tabla resumen con los resultados obtenidos para cada método.
+
+```{r}
+data.frame(Método = c("AHP", "ELECTRE", "PROMETHEE", "Arrow y Raymond"),
+           `Mejor alternativa` = c(rep(names(ponderaciones_final)[1], 3),
+                                     names(ponderaciones_final)[3]),
+           `Segunda alternativa` = c(names(ponderaciones_final)[5],
+                                     names(ponderaciones_final)[3],
+                                     names(ponderaciones_final)[5],
+                                     names(ponderaciones_final)[1]),
+            check.names = FALSE) |> crea_tabla_estilo(nombresfila = FALSE)
+
+```
+
+Así, podemos comprobar lo que se ha comentado a lo largo del desarrollo de los métodos, aquellos que nos dejan controlar mejor lo que se valora y como se valora dan un resultado más acorde a los pesos de los criterios y las valoraciones de las alternativas (AHP y PROMETHEE). Por otra parte los métodos axiomático de Arrow y Raymond junto al ELECTRE son más rígidos en este aspecto y cualquier diferencia entre las evaluaciones tiene un impacto final en su resultado. En el caso particular del método ELECTRE nos permite algo de holgura pero al ser post evaluación de los criterios solo nos habilita "quitar" dominancias. Por su parte, la ausencia de pesos en el Axiomático de Arrow y Raymond provoca que solo lo recomendemos para casos de igualdad de pesos entre los criterios, cuando cualquier diferencia entre ellos ya es significativa, o para apoyarnos en la comparación de las alternativas en bruto, antes de emplear otros métodos. 
+
+Finalmente podemos destacar los métodos AHP y PROMETHEE como los más versátiles en casos como este, para comparar artículos con características medibles como vehículos, viviendas o productos tecnológicos entre otros. No se debe olvidar que una mayor flexibilidad también provoca que podamos manipularlo, para obtener resultados que, de forma subjetiva, nos hayan convencido más antes de iniciar el proceso de decisión. Por tanto apoyarnos en otros métodos más rígidos o ser lo más objetivo posible es indispensable.
+
+## Decisión final
+
+Viendo los resultados obtenidos para todos los métodos se va a optar por el modelo `"{r} names(ponderaciones_final)[1]`" dado que aparece como la alternativa dominante en tres de los cuatro métodos y en el único que no aparece como mejor alternativa, se mantiene como el segundo mejor.
