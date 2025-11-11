@@ -16,7 +16,7 @@ lang: es
 
 # Presentación del problema
 
-El objetivo de este documento será elegir la mejor alternativa a la hora de adquirir un nuevo monitor de PC. Se va a considerar que el individuo interesado en esta adquisición va a ser un arquitecto que necesita un nuevo monitor para su estudio.
+El objetivo de este documento será elegir la mejor alternativa a la hora de adquirir un nuevo monitor de PC. Se va a considerar que el individuo interesado en esta adquisición es un arquitecto que necesita un nuevo monitor para su estudio.
 
 Se van a seleccionar 5 monitores diferentes, que tratan de representar una variedad de opciones en el mercado actual. Los criterios que se van a considerar son los siguientes:
 
@@ -29,7 +29,6 @@ Se van a seleccionar 5 monitores diferentes, que tratan de representar una varie
 * Brillo (nits)
 * Contraste (en millones de colores M)
 
-Y las alternativas las podemos ver en la siguiente tabla:
 ```{r}
 
 # Carga de librerías necesarias
@@ -48,6 +47,8 @@ source("funciones_propias/tablas_planteamiento_AHP.R")
 source("funciones_propias/animación_grafo.R")
 
 ```
+
+Y las alternativas, con sus correspondientes características, las podemos ver en la siguiente tabla:
 
 ```{r}
 datos <- read.csv2("datos/monitores.csv", header = FALSE, sep = ";")
@@ -347,6 +348,8 @@ tabla_inconsistencia_ahp <- data.frame(
 
 ```
 
+<br>
+
 Si alguna de las matrices de comparación hubiese dado un coeficiente de inconsistencia mayor a 0.1, tendríamos que haber revisado la matriz en cuestión para asegurarnos de que las relaciones lógicas entre las alternativas se han respetado. En nuestro caso, su realización ha sido meticulosa y la consistencia se ha podido cumplir sin rehacer las tablas.
 
 ### Cálculo de los pesos
@@ -510,6 +513,9 @@ aa = AnalyzeTable(modelo_ahp,variable = "priority",sort = "orig", weightColor = 
 formattable::as.htmlwidget(aa)
 ```
 
+
+<br>
+
 Esta primera tabla muestra en cada fila de los subcriterios el peso que tiene cada alternativa en ese subcriterio, facilita ver con claridad que alternativa se desempeña mejor en cada subcriterio.
 En la columna "Priority" podemos ver el desglose de los pesos, primero como se reparte la prioridad total entre cada criterio (Coste un 7'2%, Calidad un 64'9% y Experiencia de usuario un 27'9%) y segundo el mismo reparto en cada subcriterio. Es decir, nos muestra el porcentaje de prioridad dentro de cada grupo. Además del cálculo de la inconsistencia en la última columna.
 
@@ -519,6 +525,8 @@ En la columna "Priority" podemos ver el desglose de los pesos, primero como se r
 aa = AnalyzeTable(modelo_ahp, sort = "orig", weightColor = "#F8A29E", consistencyColor = "#C6AA74", alternativeColor = "#7FBFF5")
 formattable::as.htmlwidget(aa)
 ```
+
+<br>
 
 En esta otra se ven los pesos para cada monitor (ponderaciones finales) en la primera fila, además la fila de cada criterio muestra cuanto del peso total viene dado por este criterio para cada alternativa, de forma que la suma de los porcentajes de cada alternativa en esos criterios es el peso asignado a cada alternativa, y de igual forma para los subcriterios. Así para la alternativa elegida: Peso a1 = 34,2%, Coste (0,3%) + Calidad (24,6%) + Experiencia (9,3%), análogo para los subcriterios, nos permite observar cuanto ha influido cada criterio/subcriterio para el peso final de las alternativas.
 Esta tabla contiene los resultados que hemos obtenido con las funciones de clase la ya mencionada primera fila y en la columna "Weight" si nos fijamos en las filas de los subcriterios, encontramos los pesos que hemos obtenido para el último nivel de la jerarquía de criterios.
@@ -533,7 +541,11 @@ ahp::RunGUI()
 Se adjuntan algunas capturas que se han realizado mientras se utilizaba la aplicación shiny para este problema. Los resultados son iguales a los obtenidos en el código aquí expuesto.
 
 ![Cargar el modelo](AHP-Shiny/Shiny1.png)
+<br>
+
 ![Jerarquía](AHP-Shiny/Shiny2.png)
+<br>
+
 ![Tablas resultado](AHP-Shiny/Shiny3.png)
 
 :::
@@ -636,6 +648,8 @@ tabla_alternativas_nombre <- data.frame(Modelo = names(ponderaciones_final),
                                         check.names = FALSE)
 crea_tabla_estilo(tabla_alternativas_nombre, nombresfila = FALSE)
 ```
+
+<br>
 
 Y a continuación, el grafo.
 ```{r}
@@ -793,6 +807,8 @@ tablas_resultado_Promethee_II_Win <- multicriterio.metodo.promethee_windows_kabl
 tablas_resultado_Promethee_II_Win$tabEscenario
 ```
 
+<br>
+
 Esta tabla nos muestra tres bloques, el primer bloque de preferencias nos muestra un resumen de los parámetros que hemos establecido en el enunciado. El segundo bloque, estadísticas, nos da un resumen descriptivo de las evaluaciones. Dichas evaluaciones se encuentran en el tercer bloque.
 
 ### Resultado
@@ -864,6 +880,8 @@ data.frame(sols_pasos[[1]][[1]]$Mclasificacion,
            check.names = FALSE) |> crea_tabla_estilo_comparación()
 ```
 
+<br>
+
 Ahora mostramos la tabla de la última iteración
 
 ```{r}
@@ -873,7 +891,7 @@ data.frame(sols_pasos[[1]][[4]]$Mclasificacion,
 
 En esta tabla ya se puede observar el resultado del método, pero vamos a visualizarla de más formas.
 
-## Análisis de sensibilidad
+### Análisis de sensibilidad
 
 Para el análisis de sensibilidad vamos a mostrar el gráfico que muestra la evolución de la cuarta alternativa según aumenta $\alpha$. Se ha escogido esta alternativa por ser la peor inicialmente.
 
@@ -937,7 +955,7 @@ Este método nos indicaría que la mejor alternativa es el monitor "`{r} names(p
 
 # Conclusión final
 
-## Comparación de los métodos
+### Comparación de los métodos
 
 Para comparar los métodos, en primer lugar se va a adjuntar una tabla resumen con los resultados obtenidos para cada método.
 
@@ -957,6 +975,6 @@ Así, podemos comprobar lo que se ha comentado a lo largo del desarrollo de los 
 
 Finalmente podemos destacar los métodos AHP y PROMETHEE como los más versátiles en casos como este, para comparar artículos con características medibles como vehículos, viviendas o productos tecnológicos entre otros. No se debe olvidar que una mayor flexibilidad también provoca que podamos manipularlo, para obtener resultados que, de forma subjetiva, nos hayan convencido más antes de iniciar el proceso de decisión. Por tanto apoyarnos en otros métodos más rígidos o ser lo más objetivo posible es indispensable.
 
-## Decisión final
+### Decisión final
 
-Viendo los resultados obtenidos para todos los métodos se va a optar por el modelo `"{r} names(ponderaciones_final)[1]`" dado que aparece como la alternativa dominante en tres de los cuatro métodos y en el único que no aparece como mejor alternativa, se mantiene como el segundo mejor.
+Viendo los resultados obtenidos para todos los métodos se va a optar por el modelo "`{r} names(ponderaciones_final)[1]`" dado que aparece como la alternativa dominante en tres de los cuatro métodos y en el único que no aparece como mejor alternativa, se mantiene como el segundo mejor.
